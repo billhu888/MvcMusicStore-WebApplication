@@ -1,0 +1,45 @@
+﻿@model MvcMusicStore.Models.Album
+
+<p1> Album Details</p1>
+<br /> 
+<br />
+
+<table>
+    <tr> 
+        <td>Genre</td>
+        <td>@Model.GenreName</td>
+    </tr>
+    <tr>
+        <td>Artist</td>
+        <td>@Model.ArtistName</td>
+    </tr>
+    <tr>
+        <td>Title</td>
+        <td>@Model.Title</td>
+    </tr>
+    <tr>
+        <td>Price</td>
+        <td>@Model.Price</td>
+    </tr>
+    <tr>
+        <td>AlbumArtUrl</td>
+        <td>@Model.AlbumArtUrl</td>
+    </tr>
+    <tr>
+        <td>
+            <a 
+                href="@Url.Action("Edit", "StoreManager", 
+                new { AlbumId = @Model.AlbumId, 
+                    GenreId = @Model.GenreId, 
+                    ArtistId = @Model.ArtistId })"
+            > 
+                Edit
+            </a>
+        </td>
+        <td>
+            <a href="@Url.Action("Index", "StoreManager")"> 
+                Back to List
+            </a>
+        </td>
+    </tr>
+</table>

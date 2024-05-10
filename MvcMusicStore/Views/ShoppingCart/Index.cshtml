@@ -1,0 +1,167 @@
+﻿@model MvcMusicStore.Models.ShoppingCartItems
+
+@{
+    ViewData["Title"]  = "Shopping Cart";
+    bool isPost = Convert.ToBoolean(ViewData["isPost"]);
+}
+
+@*<p>@ViewData["CardID1"]</p>
+<p>@ViewBag.CardID2</p>
+<p>@ViewData["CardID3"]</p>*@
+
+<h2> Review Your Cart</h2>
+<br />
+
+@*@{
+    bool AllowCheckout = false;
+    int TotalQuantity = 0;
+
+    foreach (var item in Model.CartItems)
+    {
+        TotalQuantity = TotalQuantity + item.Count;
+    }
+
+    if (TotalQuantity > 0)
+    {
+        AllowCheckout = true;
+    }
+}
+
+@if (AllowCheckout)
+{
+    <p>
+        @Html.ActionLink("Checkout", "AddressPayment", "Checkout")
+    </p>
+}*@
+
+<p>
+    @Html.ActionLink("Checkout", "AddressPayment", "Checkout")
+</p>
+
+<div id="update-message"> </div>
+<br />
+
+@if (isPost == false)
+{
+    <div>
+        <table>
+            <tr>
+                <th>Album Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+            
+            @foreach (var item in Model.CartItems)
+            {
+                <tr id="row-@item.RecordId">
+                    <td> 
+                        @Html.ActionLink(item.Album.Title,
+                            "Details", "Store", 
+                            new { AlbumId = item.AlbumId })
+                    </td>
+
+                    <td>
+                        @item.Album.Price
+                    </td>
+
+                    <td id="item-count-@item.RecordId">
+                        @item.Count
+                    </td>
+
+                    @*<td>
+                        @Html.ActionLink("Remove From Cart",
+                            "RemoveFromCart", "ShoppingCart", 
+                            new { AlbumId = item.AlbumId })
+                    </td>*@
+
+                    <td>
+                        <a href="#" id=@item.AlbumId class="RemoveLink" 
+                            data-id=@item.RecordId
+                        >
+                            Remove From Cart
+                        </a>
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td></td>
+                <td id="cart-total">
+                    @Model.CartTotal
+                </td>
+            </tr>   
+        </table>
+    </div>
+
+    @*Must have the following 4 things
+    1) section
+    2) Json converts the 1st character of key to lowercase (case-sensitive too) 
+    3) Must call 2nd layer with proprety (message in item.message is 2nd layer)
+    4) $.each(data, function(i, item) *@
+
+    @section Scripts  
+    {
+        <script type="text/javascript">
+            $(function () 
+            {
+                // Document.ready -> link up remove event handler
+                $(".RemoveLink").click(function () 
+                {
+                    //alert("Test1");
+                    // Get the id from the link
+                    var recordToDelete = $(this).attr("data-id");
+
+                    if (recordToDelete != null) 
+                    {
+                        // Perform the ajax post
+                        $.post("/ShoppingCart/RemoveFromCartAJAX", 
+                            {"RecordId": recordToDelete },
+                            function (data) 
+                        {
+                            // Successful requests get here
+                            // Update the page elements
+                            //alert("Test2");
+                            //alert(JSON.stringify(data));
+
+                            //i represents the index of the current item within the 
+                                // array or collection being iterated over in the loop
+                            //item represents the actual (current) item or element 
+                                // itself that is being processed in the iteration
+                            $.each(data, function(i, item) 
+                            {
+                                //alert("Test3");
+                                //alert(item);
+                                //alert(item.message);
+                                //alert(item.itemCount);
+
+                                if (item.itemCount == 0) 
+                                {
+                                    $('#row-' + item.deleteId).fadeOut('slow');
+                                } 
+                                else 
+                                {
+                                    //alert("Test4");
+
+                                    $('#item-count-' + item.deleteId).text(item.itemCount);
+                                }
+
+                                $('#cart-total').text(item.cartTotal);
+                                $('#update-message').text(item.message);
+                                $('#cart-status').text('Cart (' + item.cartCount + ')');
+
+                                $('#CartItemCount').text(' (' + item.cartCount + ')');
+                            });
+                        });
+                    }
+                    else 
+                    {
+                        alert("Error");
+                    }
+                });
+            });
+        </script>
+    }
+}

@@ -1,0 +1,402 @@
+﻿@model MvcMusicStore.Models.Register
+
+@{
+    ViewData["Title"]  = "Register";
+    bool isPost = Convert.ToBoolean(ViewData["isPost"]);
+    string indicator = Convert.ToString(ViewData["Indicator"]);
+}
+
+<h2>Create Your Account</h2>
+
+@if (isPost == false) 
+{
+    <div>
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Email)</td>
+
+                    <td>
+                        <input type="text" name="Email"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.UserName)</td>
+
+                    <td>
+                        <input type="text" name="UserName" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                    <td>
+                        <input type="password" name="Password" 
+                            id="APasswordInput"
+                        />
+                        <input type="checkbox" onclick="PasswordInput()"> 
+                            Show Password
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.ConfirmPassword)</td>
+
+                    <td>
+                        <input type="password" name="ConfirmPassword" 
+                            id="APasswordInputConfirm"
+                        />
+                        <input type="checkbox" onclick="PasswordInputConfirm()"> 
+                            Show Confirm Password
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="submit" value="Create Account">
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+}
+else 
+{
+    @if (indicator == "Test1")
+    {
+        <div>
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Email)</td>
+
+                        <td>
+                            <td>
+                                <input type="text" name="Email" value=@Model.Email />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.UserName)</td>
+
+                        <td>
+                            <td>
+                                <input type="text" name="UserName" value=@Model.UserName />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="Password" 
+                                    id="APasswordInputTest1" value=@Model.Password 
+                                />
+                                <input type="checkbox" onclick="PasswordInputTest1()"> 
+                                    Show Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.ConfirmPassword)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="ConfirmPassword" 
+                                    id="APasswordInputConfirmTest1" value=@Model.ConfirmPassword 
+                                />
+                                <input type="checkbox" onclick="PasswordInputConfirmTest1()"> 
+                                    Show Confirm Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="submit" value="Create Account">
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+
+        @foreach (var key in ViewData.ModelState.Keys)
+        {
+            foreach (var error in ViewData.ModelState[key].Errors)
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        }
+
+        <div>
+            Please click on 
+            <a href="@Url.Action("Register", "Account")">
+                Register
+            </a> 
+            to log into your account.
+        </div>
+    }
+    else if (indicator == "Test2")
+    {
+        <div>
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Email)</td>
+
+                        <td>
+                            <td>
+                                <input type="text" name="Email" value=@Model.Email />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.UserName)</td>
+
+                        <td>
+                            <td>
+                                <input type="text" name="UserName" value=@Model.UserName />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="Password" 
+                                    id="APasswordInputTest2" value=@Model.Password 
+                                />
+                                <input type="checkbox" onclick="PasswordInputTest2()"> 
+                                    Show Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.ConfirmPassword)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="ConfirmPassword" 
+                                    id="APasswordInputConfirmTest2" value=@Model.ConfirmPassword 
+                                />
+                                <input type="checkbox" onclick="PasswordInputConfirmTest2()"> 
+                                    Show Confirm Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="submit" value="Create Account">
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+
+        @foreach (var key in ViewData.ModelState.Keys)
+        {
+            foreach (var error in ViewData.ModelState[key].Errors)
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        }
+    }
+    else
+    {
+        <div>
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Email)</td>
+
+                        <td>
+                            <td>
+                                <input type="text" name="Email" value=@Model.Email />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.UserName)</td>
+                        <td>
+                            <td>
+                                <input type="text" name="UserName" value=@Model.UserName />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="Password" 
+                                    id="APasswordInputTest3" value=@Model.Password 
+                                />
+                                <input type="checkbox" onclick="PasswordInputTest3()"> 
+                                    Show Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.ConfirmPassword)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="ConfirmPassword" 
+                                    id="APasswordInputConfirmTest3" value=@Model.ConfirmPassword 
+                                />
+                                <input type="checkbox" onclick="PasswordInputConfirmTest3()"> 
+                                    Show Confirm Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="submit" value="Create Account">
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+
+        @foreach (var key in ViewData.ModelState.Keys)
+        {
+            foreach (var error in ViewData.ModelState[key].Errors)
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        }
+    }
+}
+
+<script>
+    function PasswordInput() 
+    {
+        var x = document.getElementById("APasswordInput");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputConfirm()
+    {
+        var x = document.getElementById("APasswordInputConfirm");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputTest1() 
+    {
+        var x = document.getElementById("APasswordInputTest1");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputConfirmTest1()
+    {
+        var x = document.getElementById("APasswordInputConfirmTest1");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+        function PasswordInputTest2() 
+    {
+        var x = document.getElementById("APasswordInputTest2");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputConfirmTest2()
+    {
+        var x = document.getElementById("APasswordInputConfirmTest2");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputTest3() 
+    {
+        var x = document.getElementById("APasswordInputTest3");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputConfirmTest3()
+    {
+        var x = document.getElementById("APasswordInputConfirmTest3");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+</script>

@@ -1,0 +1,64 @@
+﻿@model MvcMusicStore.Models.AlbumList
+
+@{
+    ViewData["Title"]  = "List of Albums";
+}
+
+<table>
+    <tr>
+        <th>
+            Genre
+        </th>
+        <th>
+            Artist
+        </th>
+        <th>
+            Title
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            AlbumArtUrl
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.albumlist) 
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.GenreName)
+            </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ArtistName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AlbumArtUrl)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", "StoreManager", new { AlbumId = item.AlbumId, GenreId = item.GenreId, ArtistId = item.ArtistId })">
+                Edit
+            </a> |
+            <a href="@Url.Action("Details", "StoreManager", new { AlbumId = item.AlbumId, GenreId = item.GenreId, ArtistId = item.ArtistId })">
+                Details
+            </a> |
+            <a href="@Url.Action("Delete", "StoreManager", new { AlbumId = item.AlbumId, GenreId = item.GenreId, ArtistId = item.ArtistId })">
+                Delete
+            </a>
+        </td>
+    </tr>
+}
+</table>
+
+<p>
+    <a href="@Url.Action("AddNewAlbum", "StoreManager")"> 
+        Add a New Album
+    </a>
+</p>

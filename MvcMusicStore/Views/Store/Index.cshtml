@@ -1,0 +1,20 @@
+﻿@model MvcMusicStore.Models.GenreList
+
+@{
+    ViewBag.Title = "Genres";
+}
+
+<h3>Browse Genres</h3>
+
+<ul>
+    @foreach (var genre in Model.GenresList)
+    {
+        <li>
+            <a href="@Url.Action("Browse", "Store",
+                new { genre = genre.Name, genreId = genre.GenreId })"
+            >
+                @genre.Name
+            </a>
+        </li>
+    }
+</ul>

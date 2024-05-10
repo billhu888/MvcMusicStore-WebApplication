@@ -1,0 +1,155 @@
+﻿@model MvcMusicStore.Models.LogOn
+
+@{
+    ViewData["Title"]  = "Log On";
+    bool isPost = Convert.ToBoolean(ViewData["isPost"]);
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/js/site.js"></script>
+</head>
+
+<p>
+    Please enter your user name and password. 
+    <br />
+
+    <a href="@Url.Action("Register", "Account")">
+        Register
+    </a> 
+
+    if you don't have an account.
+</p>
+<br />
+<br />
+
+@if (isPost == false)
+{
+    <div>
+        @using (Html.BeginForm("LogOn", "Account", FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.UserName)</td>
+
+                    <td>
+                        <td>
+                            <input type="text" name="UserName"/>
+                        </td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                    <td>
+                        <td>
+                            <input type="password" name="Password" id="APasswordInput" />
+
+                            @*<span class="toggle-password" 
+                                onclick="togglePasswordVisibility()"
+                            >
+                                👁️
+                            </span>*@
+
+                            <input type="checkbox" onclick="PasswordInput()"> 
+                                Show Password
+                        </td>
+                    </td>
+                </tr>
+
+                @*<tr>
+                    <td>@Html.DisplayNameFor(model => model.RememberMe)</td>
+                    <td>
+                        <input type="checkbox" name="RememberMe" />
+                    </td>
+                </tr>*@
+
+                <tr>
+                    <td>
+                        <input type="submit" value="Log On">
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+}
+else 
+{
+    <div>
+        @using (Html.BeginForm("LogOn", "Account", FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.UserName)</td>
+
+                    <td>
+                        <input type="text" name="UserName" value=@Model.UserName />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                    <td>
+                        <input type="password" name="Password" 
+                            id="APasswordInputWrong" value=@Model.Password 
+                        />
+                        <input type="checkbox" onclick="PasswordInputWrong()"> 
+                            Show Password
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="submit" value="Log On">
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+
+    @foreach (var key in ViewData.ModelState.Keys)
+    {
+        foreach (var error in ViewData.ModelState[key].Errors)
+        {
+            <div>@error.ErrorMessage</div>
+        }
+    }
+}
+
+<div>
+    <a href="@Url.Action("ChangePassword", "Account")">
+        Change Password
+    </a> 
+</div>
+
+<script>
+    function PasswordInput() 
+    {
+        var x = document.getElementById("APasswordInput");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputWrong()
+    {
+        var x = document.getElementById("APasswordInputWrong");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+</script>

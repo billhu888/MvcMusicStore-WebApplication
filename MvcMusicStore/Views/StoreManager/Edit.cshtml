@@ -1,0 +1,82 @@
+﻿@model MvcMusicStore.Models.Album
+
+@{
+    ViewData["Title"] = "Edit Album";
+    bool isPost = Convert.ToBoolean(ViewData["isPost"]);
+    bool indicator = Convert.ToBoolean(ViewData["indicator"]);
+}
+
+<div>
+    @if (isPost == false)
+    {
+        @using (Html.BeginForm("Edit", "StoreManager", FormMethod.Post))
+        {
+            <table>
+@*                <tr style="display: none">
+                    <td>Album ID</td>
+                    <td>
+                        <input type="text" name="AlbumId" value="@Model.AlbumId"> />
+                    </td>
+                </tr>*@
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Genre)</td>
+                    <td>
+                        @Html.DropDownListFor(model => model.SelectGenreId, Model.SelectGenre)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.ArtistName)</td>
+                    <td>
+                       @Html.DropDownListFor(model => model.SelectArtistId, Model.SelectArtist)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Title)</td>
+                    <td>
+                        @Html.EditorFor(model => model.Title)
+                        @*<input type="text" name="Title" value="@Model.Title">*@
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Price)</td>
+                    <td>
+                        @Html.EditorFor(model => model.Price)
+                        @*<input type="text" name="Price" value=@Model.Price>*@
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.AlbumArtUrl)</td>
+                    <td>
+                        @Html.EditorFor(model => model.AlbumArtUrl)
+                        @*<input type="text" name="AlbumArtUrl" value=@Model.AlbumArtUrl>*@
+                    </td>                  
+                </tr>
+                <tr>
+                    <td><input type="submit" value="Save"></td>
+                </tr>
+                <tr>
+                    <td> 
+                        <a href="@Url.Action("Index", "StoreManager")"> 
+                            Back to List
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        }
+    }
+    else
+    {
+        @if(indicator)
+        {
+            <p>Updated the album with ID: @Model.AlbumId</p>
+
+            <a href="@Url.Action("Index", "StoreManager")"> 
+                Click on the link to go back to the list of albums
+            </a>
+        }
+        else
+        {
+            <p> Not successful. Try editing album again. </p>
+        }
+    }
+</div>

@@ -1,0 +1,26 @@
+﻿@model MvcMusicStore.Models.Genre
+
+@{
+    ViewBag.Title = "List of Albums";
+}
+
+<h2>Browsing Genre: @Model.Name</h2>
+
+<ul>
+    @if (Model.Albums != null)
+    {
+        @foreach (var genre in Model.Albums)
+        {
+            <li>
+                <a href="@Url.Action("Details", "Store",
+                    new { AlbumId = genre.AlbumId })"
+                >
+                    @genre.Title
+                </a>
+            </li>
+        }
+    }
+    else 
+    {
+    }
+</ul>

@@ -1,0 +1,19 @@
+﻿@model MvcMusicStore.Models.LogOn
+
+@{  
+    bool isPost = Convert.ToBoolean(ViewData["isPost"]);
+}
+
+@if (isPost == false) 
+{
+    <h2> Checkout Complete </h2>
+    <p> Thanks for your order! Your order number is: </p>
+    <p>
+        How about shopping for some more music in our 
+        @Html.ActionLink("store", "Index", "Home")
+    </p>
+}
+else
+{
+    
+}

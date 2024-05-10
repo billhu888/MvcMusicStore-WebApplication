@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>@ViewData["Title"] - MvcMusicStore</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/MvcMusicStore.styles.css" asp-append-version="true" />
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MVC MUSIC STORE</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                                    Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                    Privacy
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="Index">
+                                    Store
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="StoreManager" asp-action="Index">
+                                    Store Manager
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOnHeaderRow">
+                                    Log On
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">
+                                    Shopping Cart
+                                    <span id="CartItemCount"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="container">
+            <main role="main" class="pb-3">
+                <div class="row">
+                    <div class="col-md-2" id="LeftBarGenres">
+                        <ul id="genreList" class="list-unstyled"></ul>
+                    </div>
+
+                    <div class="col-md-10"> 
+                        @RenderBody()
+                    </di>
+                </div>
+            </main>
+        </div>
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2024 - MvcMusicStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+
+    <script type="text/javascript"> 
+        $(document).ready(function() 
+        {
+            //alert("Test1");
+
+            $.get("/Store/IndexAJAX", 
+                function(data)
+            {
+                //alert("Test2");
+                //alert(JSON.stringify(data));
+
+                var genreList = $('#genreList');
+
+                genreList.empty(); 
+
+                $.each(data, function(i, item) 
+                {
+                    //alert("Test3");
+                    //alert(item.name)
+
+                    var genreUrl = '@Url.Action("Browse", "Store")' +
+                        '?genre=' + encodeURIComponent(item.name) +
+                        '&genreId=' + encodeURIComponent(item.genreId);
+
+                    var genreLink = $('<a>')
+                        .attr('href', genreUrl)
+                        .text(item.name);
+
+                    var listItem = $('<li>').append(genreLink);
+                    genreList.append(listItem);             
+                });
+            });
+        });
+
+        $(function() 
+        {
+            $(document).ready(function() 
+            {
+                //alert("Test1");
+
+                $.post("/ShoppingCart/CartTotalItemsCountAJAX", 
+                    function(data) 
+                {
+                    //alert("Test2");
+                    //alert(JSON.stringify(data));
+
+                    $.each(data, function(i, item)
+                    {
+                        //alert("Test3");
+                        //alert(item.cartCount);
+
+                        $('#CartItemCount').text(' (' + item.cartCount + ')');
+                    });
+                });
+            });
+        });
+    </script>
+</html>
