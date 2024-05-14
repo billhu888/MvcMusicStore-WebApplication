@@ -5,38 +5,15 @@
     bool isPost = Convert.ToBoolean(ViewData["isPost"]);
 }
 
-@*<p>@ViewData["CardID1"]</p>
-<p>@ViewBag.CardID2</p>
-<p>@ViewData["CardID3"]</p>*@
-
 <h2> Review Your Cart</h2>
 <br />
 
-@*@{
-    bool AllowCheckout = false;
-    int TotalQuantity = 0;
-
-    foreach (var item in Model.CartItems)
-    {
-        TotalQuantity = TotalQuantity + item.Count;
-    }
-
-    if (TotalQuantity > 0)
-    {
-        AllowCheckout = true;
-    }
-}
-
-@if (AllowCheckout)
-{
-    <p>
-        @Html.ActionLink("Checkout", "AddressPayment", "Checkout")
-    </p>
-}*@
-
-<p>
+@*<p>
     @Html.ActionLink("Checkout", "AddressPayment", "Checkout")
-</p>
+</p>*@
+
+<p id="checkoutMessage"></p>
+<a href="#" id="checkoutLink">Checkout</a>
 
 <div id="update-message"> </div>
 <br />
@@ -56,9 +33,7 @@
             {
                 <tr id="row-@item.RecordId">
                     <td> 
-                        @Html.ActionLink(item.Album.Title,
-                            "Details", "Store", 
-                            new { AlbumId = item.AlbumId })
+                        @Html.ActionLink(item.Album.Title, "Details", "Store", new { AlbumId = item.AlbumId })
                     </td>
 
                     <td>
@@ -69,16 +44,8 @@
                         @item.Count
                     </td>
 
-                    @*<td>
-                        @Html.ActionLink("Remove From Cart",
-                            "RemoveFromCart", "ShoppingCart", 
-                            new { AlbumId = item.AlbumId })
-                    </td>*@
-
                     <td>
-                        <a href="#" id=@item.AlbumId class="RemoveLink" 
-                            data-id=@item.RecordId
-                        >
+                        <a href="#" id=@item.AlbumId class="RemoveLink" data-id=@item.RecordId >
                             Remove From Cart
                         </a>
                     </td>
@@ -87,11 +54,13 @@
 
             <tr>
                 <td>Total</td>
-                <td></td>
-                <td></td>
                 <td id="cart-total">
                     @Model.CartTotal
                 </td>
+                <td id="CartItemCountCart">
+                    @Model.CartTotalItems
+                </td>
+                <td></td>
             </tr>   
         </table>
     </div>
@@ -107,58 +76,68 @@
         <script type="text/javascript">
             $(function () 
             {
-                // Document.ready -> link up remove event handler
-                $(".RemoveLink").click(function () 
+                // Function to update "Checkout" link visibility and behavior
+                function updateCheckoutLink(cartTotalItems) 
                 {
-                    //alert("Test1");
-                    // Get the id from the link
-                    var recordToDelete = $(this).attr("data-id");
+                    var checkoutLink = $("#checkoutLink");
+                    var checkoutMessage = $("#checkoutMessage");
 
-                    if (recordToDelete != null) 
+                    if (cartTotalItems > 0) 
                     {
-                        // Perform the ajax post
-                        $.post("/ShoppingCart/RemoveFromCartAJAX", 
-                            {"RecordId": recordToDelete },
-                            function (data) 
-                        {
-                            // Successful requests get here
-                            // Update the page elements
-                            //alert("Test2");
-                            //alert(JSON.stringify(data));
-
-                            //i represents the index of the current item within the 
-                                // array or collection being iterated over in the loop
-                            //item represents the actual (current) item or element 
-                                // itself that is being processed in the iteration
-                            $.each(data, function(i, item) 
-                            {
-                                //alert("Test3");
-                                //alert(item);
-                                //alert(item.message);
-                                //alert(item.itemCount);
-
-                                if (item.itemCount == 0) 
-                                {
-                                    $('#row-' + item.deleteId).fadeOut('slow');
-                                } 
-                                else 
-                                {
-                                    //alert("Test4");
-
-                                    $('#item-count-' + item.deleteId).text(item.itemCount);
-                                }
-
-                                $('#cart-total').text(item.cartTotal);
-                                $('#update-message').text(item.message);
-                                $('#cart-status').text('Cart (' + item.cartCount + ')');
-
-                                $('#CartItemCount').text(' (' + item.cartCount + ')');
-                            });
-                        });
-                    }
+                        checkoutLink.attr("href", "/Checkout/AddressPayment");
+                        checkoutLink.removeClass("disabled");
+                        checkoutMessage.text("");
+                    } 
                     else 
                     {
-                        alert("Error");
+                        checkoutLink.attr("href", "#");
+                        checkoutLink.addClass("disabled");
+                        checkoutMessage.text("At least 1 item must be in the cart to check out");
+                    }
+                }
+
+                // Initial update of "Checkout" link based on cartTotalItems
+                updateCheckoutLink(@Model.CartTotalItems);
+
+                // Handle click event on "Remove From Cart" links
+                $(".RemoveLink").click(function () 
+                {
+                    var recordToDelete = $(this).data("id");
+
+                    $.post("/ShoppingCart/RemoveFromCartAJAX", { "RecordId": recordToDelete }, function (data) 
+                    {
+                        $.each(data, function (i, item)
+                        {
+                            if (item.itemCount === 0) 
+                            {
+                                $('#row-' + item.deleteId).fadeOut('slow');
+                            } 
+                            else 
+                            {
+                                $('#item-count-' + item.deleteId).text(item.itemCount);
+                            }
+
+                            $('#cart-total').text(item.cartTotal);
+                            $('#update-message').text(item.message);
+                            $('#cart-status').text('Cart (' + item.cartCount + ')');
+                            $('#CartItemCountCart').text(item.cartCount);
+                            $('#CartItemCount').text(' (' + item.cartCount + ')');
+                        });
+
+                        // Update "Checkout" link after item removal
+                        updateCheckoutLink(data.cartTotalItems);
+                    }).fail(function () 
+                    {
+                        alert("Error removing item from cart.");
+                    });
+                });
+
+                // Prevent default click behavior for "disabled" Checkout link
+                $("#checkoutLink").click(function (e) 
+                {
+                    if ($(this).hasClass("disabled")) 
+                    {
+                        e.preventDefault();
                     }
                 });
             });

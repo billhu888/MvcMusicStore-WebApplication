@@ -10,16 +10,13 @@ namespace MvcMusicStore.Models
         public const string fUserName = "UserName";
         public const string fPassword = "Password";
 
-        [Required]
+        [Required(ErrorMessage = "The Username field cannot be empty.")]
         [Display(Name = "Username")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The Password field cannot be empty.")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
-
-        //[Display(Name = "Remember me?")]
-        //public bool RememberMe { get; set; }
     }
 }

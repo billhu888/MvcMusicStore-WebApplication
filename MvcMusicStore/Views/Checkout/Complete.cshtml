@@ -2,12 +2,13 @@
 
 @{  
     bool isPost = Convert.ToBoolean(ViewData["isPost"]);
+    ViewData["Title"]  = "Order Completed";
 }
 
 @if (isPost == false) 
 {
     <h2> Checkout Complete </h2>
-    <p> Thanks for your order! Your order number is: </p>
+    <p> Thanks for your order! </p>
     <p>
         How about shopping for some more music in our 
         @Html.ActionLink("store", "Index", "Home")

@@ -13,44 +13,33 @@ namespace MvcMusicStore.Controllers
 {
     public class ShoppingCartController : Controller
     {
-        //public IActionResult Index()
-        //{
-        //    var cart1 = new ShoppingCart();
-        //    ViewBag.CardId = "Test1";
-
-        //    cart1.ShoppingCartId = cart1.GetCartId(this.HttpContext);
-
-        //    var cart2 = ShoppingCart.GetCart(this.HttpContext);
-
-        //    ShoppingCart cart3 = new ShoppingCart(this.HttpContext);
-
-        ////    // Set up our ViewModel
-        ////    /*var viewModel = new ShoppingCartViewModel
-        ////    {
-        ////        CartItems = cart.GetCartItems(),
-        ////        CartTotal = cart.GetTotal()
-        ////    };
-        ////    // Return the view
-        ////    return View(viewModel);*/
-
-        //    //view ShoppingCartId assigned in session
-        //    ViewBag.CardID2 = cart2.ShoppingCartId;
-        //    ViewData["CardID1"] = cart1.ShoppingCartId;
-        //    ViewData["CardID3"] = cart3.ShoppingCartId;
-        //    return View();
-        //}
-
+        /// <summary>
+        ///     GET: /ShoppingCart/Index
+        ///     Shows all the items in your shopping cart and your total price
+        /// </summary>
+        /// 
+        /// <returns>
+        ///     All the items in your shopping cart and your total price
+        /// </returns>
+        
         public IActionResult Index()
         {
             var cart = new ShoppingCartRepo(this.HttpContext);
 
             var ViewModel = new ShoppingCartItems();
+
             ViewModel.CartItems = new List<Cart>();
 
+            // Gets all the items in your shopping cart
             bool success1 = cart.GetCartItems(this.HttpContext, ViewModel.CartItems);
-            bool success2 = cart.GetTotal(ViewModel);
 
-            if (success1 && success2)
+            // Get how many items are in your shopping cart
+            bool success2 = cart.GetCartItemCount(ViewModel);
+
+            // Gets the total price of all of the items in your shopping cart
+            bool success3 = cart.GetTotal(ViewModel);
+
+            if (success1 && success3)
             {
                 return View(ViewModel);
             }
@@ -60,6 +49,21 @@ namespace MvcMusicStore.Controllers
             }
         }
 
+        /// <summary>
+        ///     GET: /ShoppingCart/AddToCart
+        ///     Adds an album to your shopping cart
+        /// </summary>
+        /// 
+        /// <param name="AlbumId">
+        ///     AlbumId parameter contains the AlbumId of the album
+        ///         you want to add to your cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     If item successfully added to your cart, 
+        ///         will show the updated shopping cart
+        /// </returns>
+        
         public IActionResult AddToCart(int AlbumId)
         {
             var cart = new ShoppingCartRepo(this.HttpContext);        
@@ -76,31 +80,38 @@ namespace MvcMusicStore.Controllers
             }
         }
 
-        public IActionResult RemoveFromCart(int AlbumId)
-        {
-            var cart = new ShoppingCartRepo(this.HttpContext);
-
-            bool success = cart.RemoveFromCart(AlbumId);
-
-            if (success)
-            {
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return View();
-            }
-        }
+        /// <summary>
+        ///     POST: /ShoppingCart/RemoveFromCartAJAX
+        ///     Removes an album from your shopping cart using AJAX
+        ///     This way only the necessary parts are updated and 
+        ///         not having to refresh the entire page
+        /// </summary>
+        /// 
+        /// <param name="RecordId">
+        ///     RecordId parameter contains the RecordId of the album
+        ///         you want to remove from your cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     If item successfully removed from your cart, 
+        ///         a JSON string consisting of the updated data 
+        ///         will show the updated shopping cart data
+        ///         without refreshing the entire page
+        /// </returns>
 
         [HttpPost]
         public IActionResult RemoveFromCartAJAX(int RecordId)
         {
             var CartRemove = new ShoppingCartRemoveItem();
-            var ViewModel = new ShoppingCartItems();      
+            var ViewModel = new ShoppingCartItems();   
+            
+            // Make sure there is a cart and if not create one and its ID
             var cart = new ShoppingCartRepo(this.HttpContext);
 
+            // Get the ID of the record in the cart that the item was deleted from
             CartRemove.DeleteId = RecordId;
 
+            // Retrieve the items in the cart
             ViewModel.CartItems = new List<Cart>();
 
             bool success1 = cart.GetAlbumTitleAJAX(CartRemove, RecordId);
@@ -120,53 +131,7 @@ namespace MvcMusicStore.Controllers
 
             if (success1 && success2 && success3 && success4 && success5)
             {
-                // This results in 2 layers 
-                // 1st layer is the data
-                // 2nd layer is each key (proprety) (data.cartTotal)
-
-                //{
-                    //"data":
-                    //{
-                        //"message":"For Those About To Rock We Salute You
-                            //has been removed from your shopping cart.",
-                        //"cartTotal":0,
-                        //"cartCount":0,
-                        //"itemCount":0,
-                        //"deleteId":88
-                    //}
-                //}
-
-                // The Json() method is used to serialize an object into JSON format
-                    // and return it as a JsonResult from the controller action.
-                    // It's commonly used to send data back to the client in AJAX calls.
-                //new { data = removedmodel }: This part of the code creates
-                    //an anonymous object in C#
-                //new { ... }: This syntax creates a new anonymous object.
-                    //data = removedmodel: Here, data is a property of
-                    //the anonymous object,
-                    //and removedmodel is the value assigned to this property.
-                //The property name data is used to hold the data that
-                    //will be serialized into JSON.
-                //Return Statement: The return Json(...); statement then returns
-                    //this anonymous object serialized as JSON back to the client.
-                    //In this case, removedmodel(or whatever removedmodel represents)
-                    //will be serialized into JSON format and sent back to the client.
-
                 return Json( new { data = removedmodel });
-
-                // This only results in 1 layer so every key is 
-                // processed one-by-one
-
-                //{
-                    //"message":"Let There Be Rock has been removed from
-                        //your shopping cart.",
-                    //"cartTotal":0,
-                    //"cartCount":0,
-                    //"itemCount":0,
-                    //"deleteId":88
-                //}
-
-                //return Json( removedmodel );
             }
             else
             {
@@ -174,17 +139,32 @@ namespace MvcMusicStore.Controllers
             }
         }
 
+        /// <summary>
+        ///     POST: /ShoppingCart/CartTotalItemsCountAJAX
+        ///     Get the total number of items in the cart using AJAX
+        ///     Will update the total number of items in the cart
+        ///         without having to refresh the entire page
+        /// </summary>
+        /// 
+        /// <returns>
+        ///     If succesfully counting the number of items in the cart, 
+        ///         a JSON string consisting of the number of items
+        ///         in the cart will show without refreshing the entire page
+        /// </returns>
+
         [HttpPost]
         public IActionResult CartTotalItemsCountAJAX()
         {
             var CartRemove = new ShoppingCartRemoveItem();
             var ViewModel = new ShoppingCartItems();
+
+            // Make sure there is a cart and if not create one and its ID
             var cart = new ShoppingCartRepo(this.HttpContext);
 
+            // Retrieve the items in the cart
             ViewModel.CartItems = new List<Cart>();
 
-            bool success1 = cart.GetCartItemsHeaderAJAX
-                (this.HttpContext, ViewModel.CartItems);
+            bool success1 = cart.GetCartItemsHeaderAJAX(this.HttpContext, ViewModel.CartItems);
             bool success2 = cart.GetCountHeaderAJAX(CartRemove, ViewModel);
 
             var removedmodel = new ShoppingCartRemoveItem
@@ -201,10 +181,5 @@ namespace MvcMusicStore.Controllers
                 return View();
             }
         }
-
-        //public ActionResult CartSummary()
-        //{
-        //    return PartialView("_CartSummary");
-        //}
     }
 }

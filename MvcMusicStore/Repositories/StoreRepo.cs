@@ -67,7 +67,7 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        public bool GenreAlbumsList(Genre Genre, String genre, int genreid)
+        public bool GenreAlbumsList(Genre Genre, int genreid)
         {
             bool success = false;
 

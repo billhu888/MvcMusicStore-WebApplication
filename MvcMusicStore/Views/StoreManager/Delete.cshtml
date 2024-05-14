@@ -9,22 +9,27 @@
         <td>Genre</td>
         <td>@Model.GenreName</td>
     </tr>
+
     <tr>
         <td>Artist</td>
         <td>@Model.ArtistName</td>
     </tr>
+
     <tr>
         <td>Title</td>
         <td>@Model.Title</td>
     </tr>
+
     <tr>
         <td>Price</td>
         <td>@Model.Price</td>
     </tr>
+
     <tr>
         <td>AlbumArtUrl</td>
         <td>@Model.AlbumArtUrl</td>
     </tr>
+
     <tr>
         <td>
             <a href="@Url.Action("DeleteConfirmation", "StoreManager",
@@ -32,6 +37,7 @@
                 Delete
             </a>
         </td>
+
         <td>
             <a href="@Url.Action("Index", "StoreManager")">
                 Back to List

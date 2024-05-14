@@ -15,11 +15,14 @@ namespace MvcMusicStore.Models
 
         [Required]
         [Display(Name = "User name")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email address")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address.")]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid Email Format.")]
         public string Email { get; set; }
 
         [Required]

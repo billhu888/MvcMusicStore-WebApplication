@@ -15,44 +15,37 @@
         @using (Html.BeginForm("AddNewAlbum", "StoreManager", FormMethod.Post))
         {
             <table>
-                @*<tr style="display: none">
-                    <td>Album ID</td>
-                    <td>
-                        <input type="text" name="AlbumId" value=@Model.AlbumId />
-                    </td>
-                </tr>*@
                 <tr>
                     <td>@Html.DisplayNameFor(model => model.SelectGenreId)</td>
-                    <td>
-                        @Html.DropDownListFor(
-                            model => model.SelectGenreId, Model.SelectGenre, "Select Genre")
-                    </td>
+                    <td>@Html.DropDownListFor(model => model.SelectGenreId, Model.SelectGenre, "Select Genre")</td>
                 </tr>
+
                 <tr>
                     <td>@Html.DisplayNameFor(model => model.SelectArtistId)</td>
-                    <td>
-                        @Html.DropDownListFor(
-                            model => model.SelectArtistId, Model.SelectArtist, "Select Artist")
-                    </td>
+                    <td>@Html.DropDownListFor(model => model.SelectArtistId, Model.SelectArtist, "Select Artist")</td>
                 </tr>
+
                 <tr>
                     <td>@Html.DisplayNameFor(model => model.Title)</td>
                     <td>
                         <input type="text" name="Title" />
                     </td>
                 </tr>
+
                 <tr>
                     <td>@Html.DisplayNameFor(model => model.Price)</td>
                     <td>
                         <input type="text" name="Price" />
                     </td>
                 </tr>
+
                 <tr>
                     <td>@Html.DisplayNameFor(model => model.AlbumArtUrl)</td>
                     <td>
                         <input type="text" name="AlbumArtUrl" />
                     </td>
                 </tr>
+
                 <tr>
                     <td>
                         <input type="submit" value="Add New Album">

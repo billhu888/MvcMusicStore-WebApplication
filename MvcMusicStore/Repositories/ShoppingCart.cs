@@ -11,28 +11,23 @@ namespace MvcMusicStore.Repositories
     {
         MusicStoreEntities storeDB = new MusicStoreEntities();
 
-        //must add builder.Services.AddSession() and  app.UseSession() in Program.cs to create session
-        //Session isn't auto created, need config.
+        // Must add builder.Services.AddSession() and  app.UseSession() in Program.cs to create session
+        // Session isn't auto created, need config.
         public string ShoppingCartId { get; set; }
 
         public const string CartSessionKey = "CartId";
 
+        // Default Constructor
         public ShoppingCart()
-        {
+        {}
 
-        }
-
+        //
         public ShoppingCart(HttpContext context)
         {
             ShoppingCartId = GetCartId(context);
         }
 
-
-        //There is no HttpContextBase in ASP.NET Core. HttpContext is already an abstract class which is implemented in DefaultHttpContext. Just use HttpContext.
-        //same as in controller
-        //var cart = new ShoppingCart();
-        //cart.ShoppingCartId = cart.GetCartId(this.HttpContext);
-
+        //
         public static ShoppingCart GetCart(HttpContext context)
         {
             var cart = new ShoppingCart();

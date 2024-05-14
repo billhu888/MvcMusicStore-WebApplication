@@ -34,9 +34,7 @@
                     <td>@Html.DisplayNameFor(model => model.Password)</td>
 
                     <td>
-                        <input type="password" name="Password" 
-                            id="APasswordInput"
-                        />
+                        <input type="password" name="Password" id="APasswordInput" />
                         <input type="checkbox" onclick="PasswordInput()"> 
                             Show Password
                     </td>
@@ -46,9 +44,7 @@
                     <td>@Html.DisplayNameFor(model => model.ConfirmPassword)</td>
 
                     <td>
-                        <input type="password" name="ConfirmPassword" 
-                            id="APasswordInputConfirm"
-                        />
+                        <input type="password" name="ConfirmPassword" id="APasswordInputConfirm" />
                         <input type="checkbox" onclick="PasswordInputConfirm()"> 
                             Show Confirm Password
                     </td>
@@ -96,9 +92,7 @@ else
 
                         <td>
                             <td>
-                                <input type="password" name="Password" 
-                                    id="APasswordInputTest1" value=@Model.Password 
-                                />
+                                <input type="password" name="Password" id="APasswordInputTest1" value=@Model.Password />
                                 <input type="checkbox" onclick="PasswordInputTest1()"> 
                                     Show Password
                             </td>
@@ -110,9 +104,7 @@ else
 
                         <td>
                             <td>
-                                <input type="password" name="ConfirmPassword" 
-                                    id="APasswordInputConfirmTest1" value=@Model.ConfirmPassword 
-                                />
+                                <input type="password" name="ConfirmPassword" id="APasswordInputConfirmTest1" value=@Model.ConfirmPassword />
                                 <input type="checkbox" onclick="PasswordInputConfirmTest1()"> 
                                     Show Confirm Password
                             </td>
@@ -175,9 +167,7 @@ else
 
                         <td>
                             <td>
-                                <input type="password" name="Password" 
-                                    id="APasswordInputTest2" value=@Model.Password 
-                                />
+                                <input type="password" name="Password" id="APasswordInputTest2" value=@Model.Password />
                                 <input type="checkbox" onclick="PasswordInputTest2()"> 
                                     Show Password
                             </td>
@@ -189,10 +179,206 @@ else
 
                         <td>
                             <td>
-                                <input type="password" name="ConfirmPassword" 
-                                    id="APasswordInputConfirmTest2" value=@Model.ConfirmPassword 
-                                />
+                                <input type="password" name="ConfirmPassword" id="APasswordInputConfirmTest2" value=@Model.ConfirmPassword />
                                 <input type="checkbox" onclick="PasswordInputConfirmTest2()"> 
+                                    Show Confirm Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="submit" value="Create Account">
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+
+        @foreach (var key in ViewData.ModelState.Keys)
+        {
+            foreach (var error in ViewData.ModelState[key].Errors)
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        }
+    }
+    else if (indicator == "Test3")
+    {
+        <div>
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Email)</td>
+
+                        <td>
+                            <td>
+                                <input type="text" name="Email" value=@Model.Email />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.UserName)</td>
+                        <td>
+                            <td>
+                                <input type="text" name="UserName" value=@Model.UserName />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="Password" id="APasswordInputTest3" value=@Model.Password />
+                                <input type="checkbox" onclick="PasswordInputTest3()"> 
+                                    Show Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.ConfirmPassword)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="ConfirmPassword" id="APasswordInputConfirmTest3" value=@Model.ConfirmPassword />
+                                <input type="checkbox" onclick="PasswordInputConfirmTest3()"> 
+                                    Show Confirm Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="submit" value="Create Account">
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+
+        @foreach (var key in ViewData.ModelState.Keys)
+        {
+            foreach (var error in ViewData.ModelState[key].Errors)
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        }
+    }
+    else if (indicator == "Test4")
+    {
+        <div>
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Email)</td>
+
+                        <td>
+                            <td>
+                                <input type="text" name="Email" value=@Model.Email />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.UserName)</td>
+                        <td>
+                            <td>
+                                <input type="text" name="UserName" value=@Model.UserName />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="Password" id="APasswordInputTest4" value=@Model.Password />
+                                <input type="checkbox" onclick="PasswordInputTest4()"> 
+                                    Show Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.ConfirmPassword)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="ConfirmPassword" id="APasswordInputConfirmTest4" value=@Model.ConfirmPassword />
+                                <input type="checkbox" onclick="PasswordInputConfirmTest4()"> 
+                                    Show Confirm Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="submit" value="Create Account">
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+
+        @foreach (var key in ViewData.ModelState.Keys)
+        {
+            foreach (var error in ViewData.ModelState[key].Errors)
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        }
+    }
+    else if (indicator == "Test5")
+    {
+        <div>
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Email)</td>
+
+                        <td>
+                            <td>
+                                <input type="text" name="Email" value=@Model.Email />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.UserName)</td>
+                        <td>
+                            <td>
+                                <input type="text" name="UserName" value=@Model.UserName />
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Password)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="Password" id="APasswordInputTest5" value=@Model.Password />
+                                <input type="checkbox" onclick="PasswordInputTest5()"> 
+                                    Show Password
+                            </td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.ConfirmPassword)</td>
+
+                        <td>
+                            <td>
+                                <input type="password" name="ConfirmPassword" id="APasswordInputConfirmTest5" value=@Model.ConfirmPassword />
+                                <input type="checkbox" onclick="PasswordInputConfirmTest5()"> 
                                     Show Confirm Password
                             </td>
                         </td>
@@ -245,10 +431,8 @@ else
 
                         <td>
                             <td>
-                                <input type="password" name="Password" 
-                                    id="APasswordInputTest3" value=@Model.Password 
-                                />
-                                <input type="checkbox" onclick="PasswordInputTest3()"> 
+                                <input type="password" name="Password" id="APasswordInputTest6" value=@Model.Password />
+                                <input type="checkbox" onclick="PasswordInputTest6()"> 
                                     Show Password
                             </td>
                         </td>
@@ -259,10 +443,8 @@ else
 
                         <td>
                             <td>
-                                <input type="password" name="ConfirmPassword" 
-                                    id="APasswordInputConfirmTest3" value=@Model.ConfirmPassword 
-                                />
-                                <input type="checkbox" onclick="PasswordInputConfirmTest3()"> 
+                                <input type="password" name="ConfirmPassword" id="APasswordInputConfirmTest6" value=@Model.ConfirmPassword />
+                                <input type="checkbox" onclick="PasswordInputConfirmTest6()"> 
                                     Show Confirm Password
                             </td>
                         </td>
@@ -389,6 +571,90 @@ else
     function PasswordInputConfirmTest3()
     {
         var x = document.getElementById("APasswordInputConfirmTest3");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+        function PasswordInputTest4() 
+    {
+        var x = document.getElementById("APasswordInputTest4");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputConfirmTest4()
+    {
+        var x = document.getElementById("APasswordInputConfirmTest4");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+        function PasswordInputTest5() 
+    {
+        var x = document.getElementById("APasswordInputTest5");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputConfirmTest5()
+    {
+        var x = document.getElementById("APasswordInputConfirmTest5");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputTest6() 
+    {
+        var x = document.getElementById("APasswordInputTest6");
+
+        if (x.type === "password") 
+        {
+            x.type = "text";
+        } 
+        else 
+        {
+            x.type = "password";
+        }
+    }
+
+    function PasswordInputConfirmTest6()
+    {
+        var x = document.getElementById("APasswordInputConfirmTest6");
 
         if (x.type === "password") 
         {

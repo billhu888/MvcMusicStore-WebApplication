@@ -45,25 +45,11 @@
                     <td>
                         <td>
                             <input type="password" name="Password" id="APasswordInput" />
-
-                            @*<span class="toggle-password" 
-                                onclick="togglePasswordVisibility()"
-                            >
-                                👁️
-                            </span>*@
-
                             <input type="checkbox" onclick="PasswordInput()"> 
                                 Show Password
                         </td>
                     </td>
                 </tr>
-
-                @*<tr>
-                    <td>@Html.DisplayNameFor(model => model.RememberMe)</td>
-                    <td>
-                        <input type="checkbox" name="RememberMe" />
-                    </td>
-                </tr>*@
 
                 <tr>
                     <td>
@@ -92,9 +78,7 @@ else
                     <td>@Html.DisplayNameFor(model => model.Password)</td>
 
                     <td>
-                        <input type="password" name="Password" 
-                            id="APasswordInputWrong" value=@Model.Password 
-                        />
+                        <input type="password" name="Password" id="APasswordInputWrong" value=@Model.Password />
                         <input type="checkbox" onclick="PasswordInputWrong()"> 
                             Show Password
                     </td>

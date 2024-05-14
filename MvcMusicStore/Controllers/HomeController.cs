@@ -13,15 +13,14 @@ namespace MvcMusicStore.Controllers
             _logger = logger;
         }
 
+        // GET: 
+
         public IActionResult Index()
         {
             return View();
         }
 
-        //public string Index()
-        //{
-        //    return "Hello from Home";
-        //}
+        // GET: /Home/Privacy
 
         public IActionResult Privacy()
         {

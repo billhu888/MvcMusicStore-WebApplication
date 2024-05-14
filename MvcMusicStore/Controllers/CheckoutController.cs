@@ -14,35 +14,59 @@ namespace MvcMusicStore.Controllers
 {
     public class CheckoutController : Controller
     {
+        /// <summary>
+        ///     GET: /Checkout 
+        /// </summary>
+        /// 
+        /// <returns>
+        ///     The checkout page index
+        /// </returns>
+        
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        ///     GET: /Checkout/AddressPayment
+        ///     Checks to make sure you are logged in or not before 
+        ///         you submit your address and payment information
+        /// </summary>
+        /// 
+        /// <returns>
+        ///     If you are already logged in, you are taken to the Checkout controller 
+        ///         and AddressAndPayment method to submit your address and payment information 
+        ///     If you are not logged in yet, you have to first log in before you can 
+        ///         submit your address and payment information
+        /// </returns
+
         public IActionResult AddressPayment()
         {
             var order = new Order();
-            ShoppingCartRepo SCRepo = new ShoppingCartRepo();
+            ShoppingCartRepo ShoppingCartRepo = new ShoppingCartRepo();
 
-            SCRepo.ConfirmIndicatorFromCheckout(this.HttpContext);
-            string indicator = SCRepo.CheckIfLoggedOn(this.HttpContext);
+            // Make it clear that this is from checkout
+            ShoppingCartRepo.ConfirmIndicatorFromCheckout(this.HttpContext);
+
+            // CHeck to see if you are already logged on
+            string indicator = ShoppingCartRepo.CheckIfLoggedOn(this.HttpContext);
 
             if (indicator != "True")
             {
-                //SCRepo.BCheckOutLogOnIndicator = true;
-
-                //SCRepo.GetIndicatorSignal(this.HttpContext, 
-                //    SCRepo.BCheckOutLogOnIndicator);
-
-                //var AC = new AccountController();
-
-                //AC.LogOn();
-
                 return RedirectToAction("LogOn", "Account");
             }
 
             return RedirectToAction("AddressAndPayment", "Checkout");   
         }
+
+        /// <summary>
+        ///     GET: /Checkout/AddressAndPayment
+        ///     Where you input and submit your address and payment information
+        /// </summary>
+        /// 
+        /// <returns>
+        ///     The form where you sybmit your address and payment information
+        /// </returns>
 
         public IActionResult AddressAndPayment()
         {
@@ -51,32 +75,49 @@ namespace MvcMusicStore.Controllers
             return View();
         }
 
+        /// <summary>
+        ///     POST: /Checkout/AddressAndPayment
+        ///     Make sure that all the address and payment information fields are filled in
+        ///     After that delete the shopping cart record from the shopping cart database
+        ///         and move the data to the Orders and OrderDetails databases
+        /// </summary>
+        /// 
+        /// <param name="OrderInfo">
+        ///     The OrderInfo parameter of the Order type propreties have all the
+        ///         address and payment information
+        /// </param>
+        /// 
+        /// <returns>
+        ///     If all the address and payment information fields are filled, go to the
+        ///         Complete method to finish your order
+        ///     If at least one of the address and payment information fields are missing,
+        ///         it will return an error message to you to fill the field(s) in
+        /// </returns>
+
         [HttpPost]
         public IActionResult AddressAndPayment(Order OrderInfo)
         {
             bool NoEmptyProp = true;
 
-            ShoppingCartRepo SCRepo = new ShoppingCartRepo();
+            ShoppingCartRepo ShoppingCartRepo = new ShoppingCartRepo();
 
-            //AccountController Account = new AccountController();
+            // Deletes the shopping cart record from the shopping cart database
+            //    and moves the data to the Orders and OrderDetails databases 
+            ShoppingCartRepo.MigrateCart(this.HttpContext, OrderInfo);
 
-            //Account.MigrateShoppingCart(OrderInfo, OrderInfo.Username);
-
-            SCRepo.MigrateCart(this.HttpContext, OrderInfo);
-
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
-
+            // Compiles a list of all the properties in the Order model
             PropertyInfo[] properties = typeof(Order).GetProperties();
 
+            // Goes through each proprety in the Order model
             foreach (var property in properties)
             {
+                // Retrieves the value of each proprety
                 var value = property.GetValue(OrderInfo);
 
+                // Checks to make sure every proprety has a value
                 if (value == null || string.IsNullOrWhiteSpace(value.ToString())) 
                 {
+                    // If any proprety does not have a value, it is made clear
                     NoEmptyProp = false;
                     break;
                 }
@@ -88,8 +129,7 @@ namespace MvcMusicStore.Controllers
             }    
             else
             {
-                ModelState.AddModelError("",
-                    "One or more fields must be filled in.");
+                ModelState.AddModelError("", "One or more fields are empty and must be filled in.");
 
                 ViewData["isPost"] = true;
 
@@ -97,7 +137,16 @@ namespace MvcMusicStore.Controllers
             }
         }
 
-        public IActionResult Complete(int id)
+        /// <summary>
+        ///     GET: /Checkout/Complete
+        ///     Confirmation that you have finished checking out your order
+        /// </summary>
+        ///  
+        /// <returns>
+        ///     The page confirming your order has been successfully submitted
+        /// </returns>
+        
+        public IActionResult Complete()
         {
             return View();
         }

@@ -10,9 +10,7 @@
     @foreach (var genre in Model.GenresList)
     {
         <li>
-            <a href="@Url.Action("Browse", "Store",
-                new { genre = genre.Name, genreId = genre.GenreId })"
-            >
+            <a href="@Url.Action("Browse", "Store", new { genre = genre.Name, genreId = genre.GenreId })">
                 @genre.Name
             </a>
         </li>

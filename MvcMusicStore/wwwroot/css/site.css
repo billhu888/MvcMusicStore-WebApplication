@@ -29,3 +29,72 @@ body
     transform: translateY(-50%);
     user-select: none;
 }
+
+#promotion 
+{
+    height: 300px;
+    width: 700px;
+}
+
+#header 
+{
+    font-size: 5px;
+    padding: 5px 0px 5px 0px;
+}
+
+ul#navlist 
+{
+    float: right;
+}
+
+ul#navlist li
+{
+display: inline;
+}
+
+ul#navlist li a 
+{
+    border-left: 1px dotted #8A8575;
+    padding: 10px;
+    margin-top: 10px;
+    color: #8A8575;
+    text-decoration: none;
+    float: left;
+}
+
+ul#navlist li:first-child a 
+{
+    border: none;
+}
+
+ul#navlist li a:hover 
+{
+    color: #F6855E;
+}
+
+ul#album-list 
+{
+    list-style: none;
+    margin-left: 0px;
+}
+
+ul#album-list li 
+{
+    height: 140px;
+    width: 100px;
+    float: left;
+    margin: 20px;
+    text-align: center;
+}
+
+ul#album-list li a, ul#album-list li .button 
+{
+    font-size: 13px;
+    float: left;
+}
+
+ul#album-list li a span
+{
+    color: #9b9993;
+    text-decoration: underline;
+}

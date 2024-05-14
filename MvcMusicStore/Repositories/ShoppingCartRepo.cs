@@ -36,32 +36,33 @@ namespace MvcMusicStore.Repositories
         public String UserNameOrder { get; set; }
 
         public const String CartSessionKey = "CartId";
-        public String ShoppingCartId { get; set; }        
+        public String ShoppingCartId { get; set; }
 
+        // Default Constructor
         public ShoppingCartRepo() 
         { }
 
+        // Constructor to get the Cart ID
         public ShoppingCartRepo(HttpContext context)
         {
             ShoppingCartId = GetCartId(context);
         }
 
+        // Constructor if you are logging in and you have a
+        // cart and its ID that have not been checked out yet
         public ShoppingCartRepo(HttpContext context, String UserName)
         {
             UserNameOrder = GetCartId(context, UserName);
         }
 
-        //public ShoppingCartRepo(HttpContext context, bool CheckOutLogOnIndicator)
-        //{
-        //    SCheckOutLogOnIndicator = GetIndicatorSignal(context, CheckOutLogOnIndicator);
-        //}
-
+        // Get the shopping cart ID for the cart
         public String GetCartId(HttpContext Context)
         {
             var session = Context.Session;
 
-            // The key and its value is preserved for the whole session
-            // after the 1st initialization
+            // Checks to see if the session already has a Cart ID
+            // If the session doesn't yet have a Cart ID it creates one
+            // If the session already has a Cart ID it retrieves it
             if (!session.Keys.Contains(CartSessionKey))
             {
                 var userName = Context.User.Identity.Name;
@@ -72,15 +73,21 @@ namespace MvcMusicStore.Repositories
                 }
                 else
                 {
+                    // GUILD stands for "Globally Unique Identifier"
+                    // Creates a new Cart ID
                     Guid tempCartId = Guid.NewGuid();
 
+                    // Sets the session Cart ID to the
+                    // just generated Cart ID in string format
                     session.SetString(CartSessionKey, tempCartId.ToString());
                 }
             }
 
+            // Returns the value of the Cart ID
             return session.GetString(CartSessionKey);
         }
 
+        // The Cart ID and its value is preserved after it is created
         public String GetCartId(HttpContext Context, String UserName)
         {
             var session = Context.Session;
@@ -99,28 +106,6 @@ namespace MvcMusicStore.Repositories
 
             return session.GetString(UserNameKey);
         }
-
-        //public string GetIndicatorSignal(HttpContext Context, bool CheckOutLogOnIndicator)
-        //{
-        //    var session = Context.Session;
-
-        //    if (session.Keys.Contains(CheckOutLogOnKey))
-        //    {
-        //        var userName = Context.User.Identity.Name;
-        //        string CheckOutLogOnIndicator2 = CheckOutLogOnIndicator.ToString();
-
-        //        if (!string.IsNullOrWhiteSpace(userName))
-        //        {
-        //            session.SetString(CheckOutLogOnKey, CheckOutLogOnIndicator2);
-        //        }
-        //        else
-        //        {
-        //            session.SetString(CheckOutLogOnKey, CheckOutLogOnIndicator2);
-        //        }
-        //    }
-
-        //    return session.GetString(CheckOutLogOnKey);
-        //}
 
         public void ConfirmIndicatorFromCheckout(HttpContext Context)
         {
@@ -150,6 +135,7 @@ namespace MvcMusicStore.Repositories
             session.SetString(AlreadyLogIn, "True");
         }
 
+        // Checks if you have already logged on 
         public string CheckIfLoggedOn(HttpContext Context)
         {
             var session = Context.Session;
@@ -170,15 +156,6 @@ namespace MvcMusicStore.Repositories
 
             return session.GetString(LogOnFromHeader);
         }
-
-        //public string CheckLogOnCheckout(HttpContext Context)
-        //{
-        //    var session = Context.Session;
-
-        //    session.SetString(CheckOutLogOnKey, "True");
-
-        //    return session.GetString(ComeFromCheckout);
-        //}
 
         public void UpdateCartIdToUsername(String CartId, String UserName)
         {
@@ -216,8 +193,7 @@ namespace MvcMusicStore.Repositories
 
                     order.Username = session.GetString(UserNameKey);
                     
-                    UpdateCartIdToUsername
-                        (session.GetString(CartSessionKey), order.Username);                             
+                    UpdateCartIdToUsername(session.GetString(CartSessionKey), order.Username);                             
 
                     String sql1 =
                         $" SELECT Cart.AlbumId, Cart.Count, Album.Price " +
@@ -529,59 +505,6 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        public bool RemoveFromCart(int AlbumId)
-        {
-            bool success = false;
-
-            try
-            {
-                if (Connect())
-                {
-                    String sql1 =
-                        $" SELECT Count " +
-                        $" FROM Cart " +
-                        $" WHERE AlbumId = {AlbumId} AND CartId = '{ShoppingCartId}' ";
-
-                    SqlCommand cmd = new SqlCommand(sql1, connection);
-                    int ItemCount = (int)cmd.ExecuteScalar();
-
-                    if (ItemCount > 1) 
-                    {
-                        ItemCount = ItemCount - 1;
-
-                        String sql2 =
-                            $" UPDATE Cart " +
-                            $" SET Count = {ItemCount} " +
-                            $" WHERE AlbumId = {AlbumId} AND CartId = '{ShoppingCartId}' ";
-
-                        SqlCommand command = new SqlCommand(sql2, connection);
-                        command.ExecuteNonQuery();
-                    }
-                    else
-                    {
-                        String sql3 =
-                            $" Delete From Cart" +
-                            $" WHERE AlbumId = {AlbumId} AND CartId = '{ShoppingCartId}' ";
-
-                        SqlCommand command = new SqlCommand(sql3, connection);
-                        command.ExecuteNonQuery();
-                    }
-
-                    success = true;
-                }
-                else
-                {
-                    Console.WriteLine("Failed to connect to database");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception: " + e.Message);
-            }
-
-            return success;
-        }
-
         public bool GetCartItems(HttpContext Context, List<Cart> CartItems)
         {
             var session = Context.Session;
@@ -737,6 +660,21 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        public bool GetCartItemCount(ShoppingCartItems ShoppingCartItems)
+        {
+            bool success = false;
+
+            if (ShoppingCartItems != null)
+            {
+                foreach (var item in ShoppingCartItems.CartItems)
+                {
+                    ShoppingCartItems.CartTotalItems = ShoppingCartItems.CartTotalItems + item.Count;
+                }
+            }
+
+            return success;
+        }
+
         public bool GetTotal(ShoppingCartItems ShoppingCartItems)
         {
             bool success = false;
@@ -745,9 +683,7 @@ namespace MvcMusicStore.Repositories
             {
                 foreach (var item in ShoppingCartItems.CartItems)
                 {
-                    ShoppingCartItems.CartTotal = 
-                        ShoppingCartItems.CartTotal +
-                        item.Count * item.Album.Price;
+                    ShoppingCartItems.CartTotal = ShoppingCartItems.CartTotal + item.Count * item.Album.Price;
                 }
 
                 success = true;
@@ -784,8 +720,7 @@ namespace MvcMusicStore.Repositories
                     SqlCommand cmd2 = new SqlCommand(sql2, connection);
                     AlbumTitle = (string)cmd2.ExecuteScalar();
 
-                    RemoveItem.Message =
-                        AlbumTitle + " has been removed from your shopping cart.";
+                    RemoveItem.Message = AlbumTitle + " has been removed from your shopping cart.";
 
                     success = true;
                 }
@@ -860,8 +795,7 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        public bool GetTotalAJAX(ShoppingCartRemoveItem RemoveItem,
-            ShoppingCartItems ShoppingCartItems)
+        public bool GetTotalAJAX(ShoppingCartRemoveItem RemoveItem, ShoppingCartItems ShoppingCartItems)
         {
             bool success = false;
 
@@ -869,8 +803,7 @@ namespace MvcMusicStore.Repositories
             {
                 foreach (var item in ShoppingCartItems.CartItems)
                 {
-                    RemoveItem.CartTotal = RemoveItem.CartTotal +
-                        item.Count * item.Album.Price;
+                    RemoveItem.CartTotal = RemoveItem.CartTotal + item.Count * item.Album.Price;
                 }
 
                 success = true;
@@ -882,8 +815,7 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        public bool GetCountAJAX(ShoppingCartRemoveItem RemoveItem,
-            ShoppingCartItems ShoppingCartItems)
+        public bool GetCountAJAX(ShoppingCartRemoveItem RemoveItem, ShoppingCartItems ShoppingCartItems)
         {
             bool success = false;
 
@@ -904,8 +836,7 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        public bool GetCartItemsHeaderAJAX
-            (HttpContext Context, List<Cart> CartItems)
+        public bool GetCartItemsHeaderAJAX(HttpContext Context, List<Cart> CartItems)
         {
             var session = Context.Session;
             bool success = false;
@@ -998,8 +929,7 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        public bool GetCountHeaderAJAX(ShoppingCartRemoveItem RemoveItem,
-            ShoppingCartItems ShoppingCartItems)
+        public bool GetCountHeaderAJAX(ShoppingCartRemoveItem RemoveItem, ShoppingCartItems ShoppingCartItems)
         {
             bool success = false;
 

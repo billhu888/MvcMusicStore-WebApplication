@@ -29,26 +29,33 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.GenreName)
-            </td>
+        </td>
+
         <td>
             @Html.DisplayFor(modelItem => item.ArtistName)
         </td>
+
         <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
+
         <td>
             @Html.DisplayFor(modelItem => item.Price)
         </td>
+
         <td>
             @Html.DisplayFor(modelItem => item.AlbumArtUrl)
         </td>
+
         <td>
             <a href="@Url.Action("Edit", "StoreManager", new { AlbumId = item.AlbumId, GenreId = item.GenreId, ArtistId = item.ArtistId })">
                 Edit
             </a> |
+
             <a href="@Url.Action("Details", "StoreManager", new { AlbumId = item.AlbumId, GenreId = item.GenreId, ArtistId = item.ArtistId })">
                 Details
             </a> |
+
             <a href="@Url.Action("Delete", "StoreManager", new { AlbumId = item.AlbumId, GenreId = item.GenreId, ArtistId = item.ArtistId })">
                 Delete
             </a>

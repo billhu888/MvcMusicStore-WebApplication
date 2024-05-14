@@ -2,54 +2,57 @@
 <html lang="en">
     <head>
         <title>@ViewData["Title"] - MvcMusicStore</title>
+
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/MvcMusicStore.styles.css" asp-append-version="true" />
     </head>
+
     <body>
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MVC MUSIC STORE</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
-                                    Home
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
-                                    Privacy
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="Index">
-                                    Store
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="StoreManager" asp-action="Index">
-                                    Store Manager
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOnHeaderRow">
-                                    Log On
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">
-                                    Shopping Cart
-                                    <span id="CartItemCount"></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <h1 id="header">
+                        <img src="/Images/logo.png"  />
+                        <br />
+
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                            ASP.NET MVC Music Store
+                        </a>
+                    </h1>
+
+                    <ul id="navlist">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                                Home
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="Index">
+                                Store
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOnHeaderRow">
+                                Log On
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">
+                                Shopping Cart
+                                <span id="CartItemCount"></span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="StoreManager" asp-action="Index">
+                                Store Manager
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         </header>
@@ -63,7 +66,7 @@
 
                     <div class="col-md-10"> 
                         @RenderBody()
-                    </di>
+                    </div>
                 </div>
             </main>
         </div>
@@ -86,12 +89,12 @@
         {
             //alert("Test1");
 
-            $.get("/Store/IndexAJAX", 
-                function(data)
+            $.get("/Store/IndexAJAX", function(data)
             {
                 //alert("Test2");
                 //alert(JSON.stringify(data));
 
+                // holds a reference to the genre list element so you can manipulate it
                 var genreList = $('#genreList');
 
                 genreList.empty(); 
@@ -105,9 +108,7 @@
                         '?genre=' + encodeURIComponent(item.name) +
                         '&genreId=' + encodeURIComponent(item.genreId);
 
-                    var genreLink = $('<a>')
-                        .attr('href', genreUrl)
-                        .text(item.name);
+                    var genreLink = $('<a>').attr('href', genreUrl).text(item.name);
 
                     var listItem = $('<li>').append(genreLink);
                     genreList.append(listItem);             

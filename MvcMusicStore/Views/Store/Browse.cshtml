@@ -6,21 +6,19 @@
 
 <h2>Browsing Genre: @Model.Name</h2>
 
-<ul>
+<ul id="album-list">
     @if (Model.Albums != null)
     {
         @foreach (var genre in Model.Albums)
         {
             <li>
-                <a href="@Url.Action("Details", "Store",
-                    new { AlbumId = genre.AlbumId })"
-                >
-                    @genre.Title
+                <a href="@Url.Action("Details", "Store", new { AlbumId = genre.AlbumId })">
+                    <img src="/Images/placeholder.gif" />
+                    <span>@genre.Title</span>
                 </a>
             </li>
         }
     }
     else 
-    {
-    }
+    {}
 </ul>
