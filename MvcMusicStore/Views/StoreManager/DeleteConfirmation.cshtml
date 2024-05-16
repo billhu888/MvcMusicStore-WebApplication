@@ -7,15 +7,12 @@
 
 <p>Are you sure you want to delete the album titled <b>@Model.Title</b>?</p>
 
-<a 
-    href="@Url.Action("DeleteAlbum", "StoreManager", 
-    new { AlbumId = @Model.AlbumId })"
-> 
-    Delete
+<a href="@Url.Action("DeleteAlbum", "StoreManager", new { AlbumId = @Model.AlbumId })"> 
+    Delete 
 </a>
 
 <br />
 
 <a href="@Url.Action("Index", "StoreManager")"> 
-    Back to List
+    Back to List 
 </a>

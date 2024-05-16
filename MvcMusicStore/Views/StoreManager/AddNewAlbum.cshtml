@@ -66,9 +66,66 @@ else
     {
         <p>Added the Following album: </p>
         <p>Title: @Model.Title</p>
+
+        <a href="@Url.Action("Index", "StoreManager")"> 
+                Click on the link to go back to the list of albums
+        </a>
     }
     else
     {
-        <p> Not successful. Try adding album again. </p>
+        <div>
+            @using (Html.BeginForm("AddNewAlbum", "StoreManager", FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.SelectGenreId)</td>
+                        <td>@Html.DropDownListFor(model => model.SelectGenreId, Model.SelectGenre, "Select Genre")</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.SelectArtistId)</td>
+                        <td>@Html.DropDownListFor(model => model.SelectArtistId, Model.SelectArtist, "Select Artist")</td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Title)</td>
+                        <td>
+                            <input type="text" name="Title" value=@Model.Title />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Price)</td>
+                        <td>
+                            <input type="text" name="Price" value=@Model.Price />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.AlbumArtUrl)</td>
+                        <td>
+                            <input type="text" name="AlbumArtUrl" value=@Model.AlbumArtUrl />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type="submit" value="Add New Album">
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Index", "StoreManager")">
+                                Cancel
+                            </a>  
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+        <br />
+
+        <p>
+            There is at least one box that is empty or if in price the value submitted was not at least 0.01. 
+            Please correct your errors
+        </p>
     }
 }

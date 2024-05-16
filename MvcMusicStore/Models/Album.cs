@@ -30,8 +30,8 @@ namespace MvcMusicStore.Models
         public string Title { get; set; }
 
         [Display(Name = "Price")]
-        [Required(ErrorMessage = "Price is required")]
-        [Range(0.01, 10000.00, ErrorMessage = "Price must be between 0.01 and 10000.00")]
+        [Required(ErrorMessage = "Price must be between 0.01 and 10000.00")]
+        [Range(0.01, 10000.00)]
         public decimal Price { get; set; }
 
         [Display(Name = "AlbumArtUrl")]

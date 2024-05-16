@@ -291,7 +291,7 @@ namespace MvcMusicStore.Repositories
                     String sql = 
                         $" SELECT Count(*) as Count " +
                         $" From Account " +
-                        $" WHERE Email = '{ChangePassword.UserName}' " +
+                        $" WHERE Username = '{ChangePassword.UserName}' " +
                         $"    AND Password = '{ChangePassword.CurrentPassword}' ";
 
                     DataTable dt = new DataTable();

@@ -52,8 +52,8 @@ namespace MvcMusicStore.Repositories
                 else
                 {
                     Guid tempCartId = Guid.NewGuid();
-                    session.SetString(CartSessionKey, tempCartId.ToString());
-                    
+
+                    session.SetString(CartSessionKey, tempCartId.ToString());          
                     session.SetString("Bill", "Bill HU");
                     session.SetString("YIjun", "Yijun HShiU");
                 }

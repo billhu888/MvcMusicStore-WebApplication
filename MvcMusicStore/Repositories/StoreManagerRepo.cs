@@ -227,6 +227,66 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        public bool CheckNewAlbumGenreId(Album NewAlbum)
+        {
+            bool success = false;
+
+            foreach (int id in NewAlbum.SelectGenreId)
+            {
+                success = true;
+            }     
+
+            return success;
+        }
+
+        public bool CheckNewAlbumArtistId(Album NewAlbum)
+        {
+            bool success = false;
+
+            foreach (int id in NewAlbum.SelectArtistId)
+            {
+                success = true;
+            }
+
+            return success;
+        }
+
+        public bool CheckNewAlbumTitle(String Title)
+        {
+            bool success = false;
+
+            if (!string.IsNullOrWhiteSpace(Title))
+            {
+                success = true;
+            }
+
+            return success;
+        }
+
+        public bool CheckNewAlbumPrice(decimal Price)
+        {
+            bool success = false;
+
+            if (Price > 0)
+            {
+                success = true;
+            }
+
+            return success;
+        }
+
+        public bool CheckNewAlbumArtURL(String AlbumArtUrl)
+        {
+            bool success = false;
+
+            if (!string.IsNullOrWhiteSpace(AlbumArtUrl))
+            {
+                success = true;
+            }
+
+            return success;
+        }
+
         public bool AddNewAlbum(Album NewAlbum)
         {
             bool success = false;
@@ -252,7 +312,7 @@ namespace MvcMusicStore.Repositories
                         $" INSERT INTO Album " +
                         $" (GenreId, ArtistId, Title, Price, AlbumArtUrl) " +
                         $" Values ({GenreId}, {ArtistId}, " +
-                        $" '{NewAlbum.Title}', {NewAlbum.Price}, '{NewAlbum.AlbumArtUrl}') ";
+                        $"    '{NewAlbum.Title}', {NewAlbum.Price}, '{NewAlbum.AlbumArtUrl}') ";
 
                     SqlCommand command = new SqlCommand(sql, connection);
                     command.ExecuteNonQuery();

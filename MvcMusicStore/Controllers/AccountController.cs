@@ -313,6 +313,7 @@ namespace MvcMusicStore.Controllers
         ///     Takes you to the page where you can change your password
         /// </returns>
         /// 
+
         public IActionResult ChangePassword()
         {
             ViewData["isPost"] = false;
@@ -346,12 +347,15 @@ namespace MvcMusicStore.Controllers
             // Check that the New Password and Confirm New Password match
             bool success2 = AccountRepo.ChangePasswordsNewPassword(ChangePassword);
 
-            if (success1 && success2)
+            // Checks if the password is at least 6 characters long
+            bool success3 = AccountRepo.CheckPasswordLength(ChangePassword.NewPassword);
+
+            if (success1 && success2 && success3)
             {
                 // Changes the password of your account
-                bool success3 = AccountRepo.ChangePasswordUpdatePassword(ChangePassword);
+                bool success4 = AccountRepo.ChangePasswordUpdatePassword(ChangePassword);
 
-                if (success3)
+                if (success4)
                 {
                     return RedirectToAction("Index", "Store");
                 }
@@ -371,12 +375,21 @@ namespace MvcMusicStore.Controllers
                 return View(ChangePassword);
             }
             // Error message if the New Password and Confirm New Password don't match
-            else
+            else if (!success2)
             {
                 ModelState.AddModelError("", "The passwords don't match. ");
 
                 ViewData["isPost"] = true;
                 ViewData["Indicator"] = "Test2";
+
+                return View(ChangePassword);
+            }
+            else 
+            {
+                ModelState.AddModelError("", "The new password must be at least 6 characters long. ");
+
+                ViewData["isPost"] = true;
+                ViewData["Indicator"] = "Test3";
 
                 return View(ChangePassword);
             }
