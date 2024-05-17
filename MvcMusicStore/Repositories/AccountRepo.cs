@@ -18,7 +18,20 @@ namespace MvcMusicStore.Repositories
 {
     class AccountRepo : BaseRepo
     {
-        // Checks if the username and passwrod you are logging in with matches
+        /// <summary>
+        ///    Checks if the username and passwrod you are logging in with matches
+        ///       with what is in the database
+        /// </summary>
+        /// 
+        /// <param name="LogOn">
+        ///     Contains the username and password used to log on
+        /// </param>
+        /// 
+        /// <returns>
+        ///    success=true means that a matching record of the username and password 
+        ///       was found in the database
+        /// </returns>
+
         public bool LogOn(LogOn LogOn)
         {
             bool success = false;
@@ -66,11 +79,26 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Checks to see if the email you are registering with already exists or not
-        public bool RegisterEmail(Register Register)
+        /// <summary>
+        ///     Checks if the email you are registering with already exists or not in the database
+        /// </summary>
+        /// 
+        /// <param name="Email">
+        ///     Contains the email used to register for a new account
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the email used to register for a new account 
+        ///        does not exist in the database
+        /// </returns>
+
+        public bool RegisterEmail(String Email)
         {
             bool success = false;
             int count = 0;
+
+            // If the email is sent as null, it converts it to an empty string
+            Email = Email ?? "";
 
             try
             {
@@ -80,7 +108,7 @@ namespace MvcMusicStore.Repositories
                     String sql =
                         $" SELECT Count(*) as Count " +
                         $" From Account " +
-                        $" WHERE Email = '{Register.Email}' ";
+                        $" WHERE Email = '{Email}' ";
 
                     DataTable dt = new DataTable();
                     SqlDataAdapter da = new SqlDataAdapter();
@@ -93,7 +121,7 @@ namespace MvcMusicStore.Repositories
 
                         // Checks to see that there is no record of this email address
                         // (count == 0 means the email address does not exist and so
-                        // you can create a new account with that email address)
+                        //    you can create a new account with that email address)
                         if (count == 0)
                         {
                             success = true;
@@ -113,15 +141,33 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Checks if the email is valid or not
+        /// <summary>
+        ///    Checks if the email is valid or not
+        /// </summary>
+        /// 
+        /// <param name="Email">
+        ///     Contains the email used to register for a new account
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that the email meets the requirements
+        /// </returns>
+
         public bool CheckEmailValid(String Email)
         {
             bool success = false;
 
+            // If the email is sent as null, it converts it to an empty string
             Email = Email ?? "";
 
+            // Tells the regular expression criteria the email must meet
             string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+            // Creates a new instance of the Regex class containing the regex pattern you want 
+            //    to see if a string matches 
             Regex regex = new Regex(pattern);
+
+            // Takes the actual string in Match to see if it matches the regex pattern matches
             Match match = regex.Match(Email);
 
             if (match.Success)
@@ -140,25 +186,62 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Counts how many occurrences each character is in a string
+        /// <summary>
+        ///     Counts how many occurrences a character is in a string
+        /// </summary>
+        /// 
+        /// <param name="input">
+        ///     The email undergoing regex testing
+        /// </param>
+        /// 
+        /// <param name="target">
+        ///     The selected character that is to be used to see how many times 
+        ///        it exists in the email
+        /// </param>
+        /// 
+        /// <returns>
+        ///     How many times the selected character exists in the email
+        /// </returns>
+        
         private int CountOccurrences(string input, char target)
         {
             int count = 0;
+
+            // Counts how many occurrences a character is in a string
+            // Iterates through every character in the email seeing if it matches
+            //    the selected character
             foreach (char c in input)
             {
+                // Checks if the character currently being iterated on matches the 
+                //    selected character
                 if (c == target)
                 {
+                    // If matches the selected character count goes up by 1
                     count++;
                 }
             }
             return count;
         }
 
-        // Checks to see if the username you are registering with already exists or not
-        public bool RegisterUserName(Register Register)
+        /// <summary>
+        ///     Checks to see if the username you are registering with already exists or not
+        /// </summary>
+        /// 
+        /// <param name="UserName">
+        ///     The UserName that the user submitted when creating a new account
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the username is not been already taken and can be used
+        /// </returns>
+        
+        public bool RegisterUserName(String UserName)
         {
             bool success = false;
             int count = 0;
+
+            // If the username is sent as null, it converts it to an empty string
+            UserName = UserName ?? "";
 
             try
             {
@@ -168,7 +251,7 @@ namespace MvcMusicStore.Repositories
                     String sql =
                         $" SELECT Count(*) as Count " +
                         $" From Account " +
-                        $" WHERE Username = '{Register.UserName}' ";
+                        $" WHERE Username = '{UserName}' ";
 
                     DataTable dt = new DataTable();
                     SqlDataAdapter da = new SqlDataAdapter();
@@ -180,7 +263,7 @@ namespace MvcMusicStore.Repositories
                         count = Convert.ToInt32(dt.Rows[0]["Count"]);
 
                         // Checks to see if a record of this username already exists 
-                        // (count == 00 means it does not exist and can be used)
+                        // (count == 0 means it does not exist and can be used)
                         if (count == 0)
                         {
                             success = true;
@@ -200,14 +283,28 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Checks if the username is at least 6 characters long
-        public bool CheckUsernameLength(String Username)
+        /// <summary>
+        ///     Checks if the username is at least 6 characters long
+        /// </summary>
+        /// 
+        /// <param name="UserName">
+        ///     The UserName that the user submitted when creating a new account
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the username meets the requiremnt of being at 
+        ///         least 6 characters long and can be used
+        /// </returns>
+
+        public bool CheckUsernameLength(String UserName)
         {
             bool success = false;
 
-            Username = Username ?? "";
+            // If the username is sent as null, it converts it to an empty string
+            UserName = UserName ?? "";
 
-            if (Username.Length >= 6)
+            // Checks if the username is at least 6 characters long
+            if (UserName.Length >= 6)
             {
                 success = true;
             }
@@ -215,12 +312,30 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Checks if the password and confirm passwords match
+        /// <summary>
+        ///     Checks if the password and confirm passwords match
+        /// </summary>
+        /// 
+        /// <param name="Register">
+        ///     Contains both the password and confirmpassword the user inputted 
+        ///        when creating a new account to check if they match
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the password and confirmpassowrd match 
+        /// </returns>
+        
         public bool RegisterPasswords(Register Register)
         {
             bool success = false;
 
-            // Checks if the password and confirm passwords match
+            // If the password is sent as null, it converts it to an empty string
+            String Password = Register.Password ?? "";
+
+            // If the confirm password is sent as null, it converts it to an empty string
+            String ConfirmPassword = Register.ConfirmPassword ?? "";
+
+            // Checks if the password and confirm password match
             if (Register.Password == Register.ConfirmPassword)
             {
                 success = true;
@@ -229,13 +344,27 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Checks if the password is at least 6 characters long
+        /// <summary>
+        ///     Checks if the password is at least 6 characters long
+        /// </summary>
+        /// 
+        /// <param name="Password">
+        ///     Contains the password the user inputted when creating a new account
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the password meets the requirement of being at leaat
+        ///         6 characters long and can be used
+        /// </returns>
+        
         public bool CheckPasswordLength(String Password)
         {
             bool success = false;
 
+            // If the password is sent as null, it converts it to an empty string
             Password = Password ?? "";
 
+            // Checks if the password is at least 6 characters long
             if (Password.Length >= 6)
             {
                 success = true;
@@ -244,7 +373,20 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Insert into SQL the newly created account's username, password, and email
+        /// <summary>
+        ///     Insert into SQL the newly created account's username, password, and email
+        /// </summary>
+        /// 
+        /// <param name="Register">
+        ///     Contains the newly created account's username, password, and email that 
+        ///        will be inserted into the database of users
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that the new account and its user and login information
+        ///         have been successfully inserted into the database of users
+        /// </returns>
+
         public bool AddAccount(Register Register)
         {
             bool success = false;
@@ -277,7 +419,19 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Used to check if the username and current password match to verify user
+        /// <summary>
+        ///     Used to check if the username and current password match to verify user
+        /// </summary>
+        /// 
+        /// <param name="ChangePassword">
+        ///     Contains the username and the current password to verify the user who 
+        ///        wants to change the account password
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the user has been verified and can change the account password
+        /// </returns>
+        
         public bool ChangePasswordConfirmUserPassword(ChangePassword ChangePassword)
         {
             bool success = false;
@@ -324,7 +478,19 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Checks if the password and confirm passwords match
+        /// <summary>
+        ///     Checks if the new password and confirm password match
+        /// </summary>
+        /// 
+        /// <param name="ChangePassword">
+        ///     Contians the new password and confirm password to see if they match
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the new password and confirm password match and the
+        ///        new password can be used for the account
+        /// </returns>
+        
         public bool ChangePasswordsNewPassword(ChangePassword ChangePassword)
         {
             bool success = false;
@@ -338,7 +504,19 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
-        // Insert into SQL the newly created account's username, password, and email
+        /// <summary>
+        ///     Insert into SQL the newly created account's username, password, and email
+        /// </summary>
+        /// 
+        /// <param name="ChangePassword">
+        ///     Contains the user account information and the new password for the account
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that the user account has been updated with the new password
+        ///        in the database
+        /// </returns>
+
         public bool ChangePasswordUpdatePassword(ChangePassword ChangePassword)
         {
             bool success = false;

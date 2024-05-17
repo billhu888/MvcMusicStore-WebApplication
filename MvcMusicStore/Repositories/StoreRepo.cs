@@ -15,6 +15,19 @@ namespace MvcMusicStore.Repositories
 {
     class StoreRepo : BaseRepo
     {
+        /// <summary>
+        ///     Gets the list of all the genres
+        /// </summary>
+        /// 
+        /// <param name="GenresList">
+        ///     A list that will hold all the genres
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that all the genres 
+        ///        have been added to the list of genres
+        /// </returns>
+
         public bool GenresList(List<Genre> GenresList)
         {
             bool success = false;
@@ -36,14 +49,17 @@ namespace MvcMusicStore.Repositories
                     { 
                         Genre genre;
 
+                        // Goes throw each row (genre) to add to list of genres
                         foreach(DataRow row in dt.Rows) 
                         {
+                            // Fills in the model of each genre
                             genre = new Genre() 
                             {
                                 GenreId = (int)row[Genre.fGenreId],
                                 Name = (string)row[Genre.fName],
                             };
 
+                            // Adds each genre to the list of genres
                             GenresList.Add(genre);
                         }
                     }
@@ -66,6 +82,24 @@ namespace MvcMusicStore.Repositories
 
             return success;
         }
+
+        /// <summary>
+        ///     Gets the list of albums belonging to the selected genre
+        /// </summary>
+        /// 
+        /// <param name="Genre">
+        ///     Model that will hold all the albums belonging to the 
+        ///        selected genre
+        /// </param>
+        /// 
+        /// <param name="genreid">
+        ///     Id of the selected genre
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that it has successfully retrieved and added
+        ///        all the albums of the selected genre to the list
+        /// </returns>
 
         public bool GenreAlbumsList(Genre Genre, int genreid)
         {
@@ -90,8 +124,10 @@ namespace MvcMusicStore.Repositories
                         Genre.Albums = new List<Album>();
                         Album album;
 
+                        // Goes throw each row (album)
                         foreach (DataRow row in dt.Rows)
                         {
+                            // Fills in the model of each album
                             album = new Album()
                             {
                                 AlbumId = (int)row[Album.fAlbumId],
@@ -102,6 +138,8 @@ namespace MvcMusicStore.Repositories
                                 AlbumArtUrl = (string)row[Album.fAlbumArtUrl]
                             };
 
+                            // Adds each album to the list of albums belonging
+                            //    to the specific genre 
                             Genre.Albums.Add(album);
                         }
                     }
@@ -125,6 +163,23 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        /// <summary>
+        ///     Provides the details of each album
+        /// </summary>
+        /// 
+        /// <param name="album">
+        ///     Model that will hold the information of the selected album
+        /// </param>
+        /// 
+        /// <param name="albumId">
+        ///     Id of the selected album
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that the details of the selected album
+        ///        have been successful retrieve and added to the model
+        /// </returns>
+
         public bool AlbumDetails(Album album, int albumId)
         {
             bool success = false;
@@ -143,8 +198,10 @@ namespace MvcMusicStore.Repositories
                     da.SelectCommand = new SqlCommand(sql, connection);
                     da.Fill(dt);
 
+                    // Checks if the selected album Id is in the database
                     if (dt.Rows.Count == 1)
                     {
+                        // Adds the album's information to the model
                         foreach (DataRow row in dt.Rows)
                         {
                             album.AlbumId = (int)row[Album.fAlbumId];
@@ -160,6 +217,7 @@ namespace MvcMusicStore.Repositories
                         Console.WriteLine("Album ID does not belong to 1 album");
                     }
 
+                    // Checks if the album's genre id is in the database
                     String sql2 =
                         $" SELECT * " +
                         $" FROM Genre " +
@@ -170,8 +228,10 @@ namespace MvcMusicStore.Repositories
                     da2.SelectCommand = new SqlCommand(sql2, connection);
                     da2.Fill(dt2);
 
+                    // Checks if the selected genre name is in the database
                     if (dt2.Rows.Count == 1)
                     {
+                        // Adds the album's genre name to the model
                         foreach (DataRow row in dt2.Rows)
                         {
                             album.GenreName = (string)row["Name"];
@@ -192,8 +252,10 @@ namespace MvcMusicStore.Repositories
                     da3.SelectCommand = new SqlCommand(sql3, connection);
                     da3.Fill(dt3);
 
+                    // Checks if the album's artist is in the database
                     if (dt3.Rows.Count == 1)
                     {
+                        // Adds the album's artist to the model
                         foreach (DataRow row in dt3.Rows)
                         {
                             album.ArtistName = (string)row["Name"];

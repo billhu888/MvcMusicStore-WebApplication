@@ -38,31 +38,68 @@ namespace MvcMusicStore.Repositories
         public const String CartSessionKey = "CartId";
         public String ShoppingCartId { get; set; }
 
-        // Default Constructor
+        /// <summary>
+        ///    Default Constructor
+        /// </summary>
+        
         public ShoppingCartRepo() 
         { }
 
-        // Constructor to get the Cart ID
+        /// <summary>
+        ///     Constructor to get the Cart ID
+        /// </summary>
+        /// 
+        /// <param name="context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+
         public ShoppingCartRepo(HttpContext context)
         {
+            // Get the ID of the shopping cart
             ShoppingCartId = GetCartId(context);
         }
 
-        // Constructor if you are logging in and you have a
-        // cart and its ID that have not been checked out yet
+        /// <summary>
+        ///     Constructor if you are logging in and you have a
+        ///         cart and its ID that have not been checked out yet
+        /// </summary>
+        /// 
+        /// <param name="context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <param name="UserName">
+        ///     The user's username
+        /// </param>
+
         public ShoppingCartRepo(HttpContext context, String UserName)
         {
+            // Get the ID of the user's shopping cart
             UserNameOrder = GetCartId(context, UserName);
         }
 
-        // Get the shopping cart ID for the cart
+        /// <summary>
+        ///     Get the shopping cart ID for the cart from the CartSessionKey
+        ///     If there is no ID for the cart a cart ID is generated
+        ///         and assigned to the CartSessionKey
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <returns>
+        ///     The Cart ID assigned to the CartSessionKey
+        /// </returns>
+
         public String GetCartId(HttpContext Context)
         {
             var session = Context.Session;
 
-            // Checks to see if the session already has a Cart ID
-            // If the session doesn't yet have a Cart ID it creates one
-            // If the session already has a Cart ID it retrieves it
+            // Checks if the session already has a Cart ID in CartSessionKey
+            // If the session doesn't have a Cart ID it creates one and assigns
+            //    it to CartSessionKey and then gets it from CartSessionKey
+            // If the session already has a Cart ID it gets it from CartSessionKey
             if (!session.Keys.Contains(CartSessionKey))
             {
                 var userName = Context.User.Identity.Name;
@@ -87,11 +124,30 @@ namespace MvcMusicStore.Repositories
             return session.GetString(CartSessionKey);
         }
 
-        // The Cart ID and its value is preserved after it is created
+        /// <summary>
+        ///     Retrieves the username from UserNameKey
+        ///     If UserNameKey doesnt have a username it assigns it the UserName
+        ///        and then gets it from UserNameKey
+        ///     If UserNameKey already has a username it gets it from UserNameKey
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <param name="UserName">
+        ///     The user's username
+        /// </param>
+        /// 
+        /// <returns>
+        ///     The user's username from UserNameKey
+        /// </returns>
+
         public String GetCartId(HttpContext Context, String UserName)
         {
             var session = Context.Session;
 
+            // Checks if there is not already UserNameKey
             if (!session.Keys.Contains(UserNameKey))
             {
                 if (!string.IsNullOrWhiteSpace(UserName))
@@ -100,26 +156,62 @@ namespace MvcMusicStore.Repositories
                 }
                 else
                 {
+                    // Sets UserNameKey to the UserName
                     session.SetString(UserNameKey, UserName);
                 }
             }
 
+            // Returns the value of UserNameKey
             return session.GetString(UserNameKey);
         }
+
+        /// <summary>
+        ///     Confirms this is coming from checkout
+        ///     Sets the ComeFromCheckout key to true saying it is from checkout
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
 
         public void ConfirmIndicatorFromCheckout(HttpContext Context)
         {
             var session = Context.Session;
 
+            // Sets the ComeFromCheckout key to true saying it is from checkout
             session.SetString(ComeFromCheckout, "True");
         }
 
+        /// <summary>
+        ///     Checks if you are logging in from the checkout as you need to have 
+        ///        an account to checkout
+        ///     Sets the ComeFromCheckout key to true indicating it is coming from checkout
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <returns>
+        /// 
+        /// </returns>
+
         public string CheckFromCheckoutIndicator(HttpContext Context)
         {
-            var session = Context.Session;       
+            var session = Context.Session;
 
+            // Sets the ComeFromCheckout key to true indicating it is coming from checkout
             return session.GetString(ComeFromCheckout);
         }
+
+        /// <summary>
+        ///     Switch the logging in from checking out back to false
+        ///     Sets the ComeFromCheckout back to false
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
 
         public void CheckFromCheckoutIndicatorReturnFalse(HttpContext Context)
         {
@@ -128,6 +220,14 @@ namespace MvcMusicStore.Repositories
             session.SetString(ComeFromCheckout, "True");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+
         public void ConfirmLoggedOn(HttpContext Context)
         {
             var session = Context.Session;
@@ -135,27 +235,77 @@ namespace MvcMusicStore.Repositories
             session.SetString(AlreadyLogIn, "True");
         }
 
-        // Checks if you have already logged on 
+        /// <summary>
+        ///     Checks if you have already logged on by checking the AlreadyLogIn key
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <returns>
+        ///     The result of the AlreadyLogIn key indicating if you are logged on or not
+        /// </returns>
+
         public string CheckIfLoggedOn(HttpContext Context)
         {
             var session = Context.Session;
 
+            // Checks the AlreadyLogIn key indicating if you are already logged in or not
             return session.GetString(AlreadyLogIn);
         }
+
+        /// <summary>
+        ///     Confirmss that you are logging in from the header 
+        ///     Sets the LogOnFromHeader key to true
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
 
         public void ConfirmLogOnFromHeader(HttpContext Context)
         {
             var session = Context.Session;
 
+            // Sets the LogOnFromHeader key to true indicating you are logging in from the header
             session.SetString(LogOnFromHeader, "True");
         }
+
+        /// <summary>
+        ///     Checks if you are logging in from the header by checking the LogOnFromHeader key value
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <returns>
+        ///     Returns the value of the LogOnFromHeader key
+        ///     True means you are logging in from the header
+        /// </returns>
 
         public string CheckLogOnFromHeader(HttpContext Context)
         {
             var session = Context.Session;
 
+            // Checks and returns the value of the LogOnFromHeader key to see
+            //    if you are logging in from the header or not
             return session.GetString(LogOnFromHeader);
         }
+
+        /// <summary>
+        ///     When you log into you account, it changes the CartId 
+        ///        from the CartId to your username
+        /// </summary>
+        /// 
+        /// <param name="CartId">
+        ///     The Id of the cart you want to change to your username
+        /// </param>
+        /// 
+        /// <param name="UserName">
+        ///     Your username which will replace the cartID
+        /// </param>
 
         public void UpdateCartIdToUsername(String CartId, String UserName)
         {
@@ -182,6 +332,19 @@ namespace MvcMusicStore.Repositories
             }
         }
 
+        /// <summary>
+        ///     After you checkout, it moves the cart record to the Order and Order Details tables
+        ///        and deletes the cart record
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <param name="order">
+        ///     Holds all your personal, contact, and payment information
+        /// </param>
+
         public void MigrateCart(HttpContext Context, Order order)
         {
             try
@@ -191,8 +354,11 @@ namespace MvcMusicStore.Repositories
                     var session = Context.Session;
                     decimal TotalCost = 0.00M;
 
+                    // Sets the value of the UserNameKey key which holds your username to the 
+                    //    UserNameKey proprerty
                     order.Username = session.GetString(UserNameKey);
                     
+                    // Changes your cart ID to your username
                     UpdateCartIdToUsername(session.GetString(CartSessionKey), order.Username);                             
 
                     String sql1 =
@@ -229,6 +395,7 @@ namespace MvcMusicStore.Repositories
                         Console.WriteLine("No items ordered");
                     }
 
+                    // Calculates the total cost of your order
                     foreach (var item in order.OrderDetails)
                     {
                         TotalCost = TotalCost + item.Quantity * item.UnitPrice;
@@ -241,6 +408,7 @@ namespace MvcMusicStore.Repositories
                     SqlCommand cmd = new SqlCommand(sql2, connection);
                     int rowCount = (int)cmd.ExecuteScalar();
 
+                    // Gets the OrderId of your order
                     if (rowCount == 0)
                     {
                         order.OrderId = 1;
@@ -264,9 +432,12 @@ namespace MvcMusicStore.Repositories
                         }
                     }
 
+                    // Sets the Total proprety to the cost of your order
                     order.Total = TotalCost;
+
                     DateTime dateTime = DateTime.Now;
 
+                    // Adds the Order information into the Orders database
                     String sql4 =
                         $" INSERT INTO ORDERS (" +
                         $"    OrderId, Username, FirstName, LastName, Address, " +
@@ -282,6 +453,8 @@ namespace MvcMusicStore.Repositories
                     SqlCommand command = new SqlCommand(sql4, connection);
                     command.ExecuteNonQuery();
 
+                    // Adds every item that was ordered in your order into the 
+                    //    Order Details database
                     foreach (var item in order.OrderDetails)
                     {
                         item.OrderId = order.OrderId;
@@ -326,6 +499,7 @@ namespace MvcMusicStore.Repositories
                         command2.ExecuteNonQuery();
                     }
 
+                    // Deletes your shopping cart from the Cart database
                     String sql8 =
                         $" DELETE FROM Cart" +
                         $" WHERE CartId = '{order.Username}' ";
@@ -345,6 +519,22 @@ namespace MvcMusicStore.Repositories
                 Console.WriteLine("Exception: " + e.Message);
             }
         }
+
+        /// <summary>
+        ///     Adds each item you ordered to your shopping cart (cart database)
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <param name="AlbumId">
+        ///     The Id of the album you just added to your cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the album was successfully added to your cart (cart database)
+        /// </returns>
 
         public bool AddToCart(HttpContext Context, int AlbumId)
         {
@@ -388,6 +578,8 @@ namespace MvcMusicStore.Repositories
                         }
                     }
 
+                    // Checks if you are already logged in so it knows if it is to find
+                    // your shopping cart ID or your username in the Cart database
                     if (session.GetString(AlreadyLogIn) == "True") 
                     {
                         String sql3 =
@@ -399,6 +591,7 @@ namespace MvcMusicStore.Repositories
                         SqlCommand cmd2 = new SqlCommand(sql3, connection);
                         int rowCount2 = (int)cmd2.ExecuteScalar();
 
+                        // Checks if it is the 1st item of that album being added to your cart 
                         if (rowCount2 == 0)
                         {
                             String sql4 =
@@ -450,6 +643,7 @@ namespace MvcMusicStore.Repositories
                         SqlCommand cmd2 = new SqlCommand(sql3, connection);
                         int rowCount2 = (int)cmd2.ExecuteScalar();
 
+                        // Checks if it is the 1st item of that album being added to your cart 
                         if (rowCount2 == 0)
                         {
                             String sql4 =
@@ -505,6 +699,22 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        /// <summary>
+        ///     Retrieves every item in your shopping cart
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <param name="CartItems">
+        ///     Holds every item that is in your shopping cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that all items in your shopping cart have been retrieved
+        /// </returns>
+
         public bool GetCartItems(HttpContext Context, List<Cart> CartItems)
         {
             var session = Context.Session;
@@ -514,6 +724,8 @@ namespace MvcMusicStore.Repositories
             {
                 if (Connect())
                 {
+                    // Checks if you are already logged in so it knows if it is to find
+                    //    your shopping cart ID or your username in the Cart database
                     if (session.GetString(AlreadyLogIn) == "True")
                     {
                         String sql1 =
@@ -526,6 +738,7 @@ namespace MvcMusicStore.Repositories
                         da.SelectCommand = new SqlCommand(sql1, connection);
                         da.Fill(dt);
 
+                        // Checks if you have any items in your shopping cart
                         if (dt.Rows.Count > 0)
                         {
                             Cart CartItem;
@@ -592,6 +805,7 @@ namespace MvcMusicStore.Repositories
                         da.SelectCommand = new SqlCommand(sql1, connection);
                         da.Fill(dt);
 
+                        // Checks if you have any items in your shopping cart
                         if (dt.Rows.Count > 0)
                         {
                             Cart CartItem;
@@ -660,12 +874,26 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        /// <summary>
+        ///     Counts how many items are in your shopping cart
+        /// </summary>
+        /// 
+        /// <param name="ShoppingCartItems">
+        ///     Model that will hold the count of how many items you have in your cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means it has successfully retrieved how many items are in your cart
+        /// </returns>
+
         public bool GetCartItemCount(ShoppingCartItems ShoppingCartItems)
         {
             bool success = false;
 
             if (ShoppingCartItems != null)
             {
+                // Counts how many items are in your cart by looking at each item in your cart and how many
+                //    of each item are in your cart
                 foreach (var item in ShoppingCartItems.CartItems)
                 {
                     ShoppingCartItems.CartTotalItems = ShoppingCartItems.CartTotalItems + item.Count;
@@ -675,12 +903,25 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        /// <summary>
+        ///     Calculates the total cost of all the items in your cart
+        /// </summary>
+        /// 
+        /// <param name="ShoppingCartItems">
+        ///     Model that will hold the cost of all the items in your cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means it has successfully calculated the cost off all of the items in your cart
+        /// </returns>
+
         public bool GetTotal(ShoppingCartItems ShoppingCartItems)
         {
             bool success = false;
 
             if (ShoppingCartItems.CartItems  != null)
             {
+                // Calculates the cost of each item in your cost
                 foreach (var item in ShoppingCartItems.CartItems)
                 {
                     ShoppingCartItems.CartTotal = ShoppingCartItems.CartTotal + item.Count * item.Album.Price;
@@ -689,10 +930,29 @@ namespace MvcMusicStore.Repositories
                 success = true;
             }
             else
-            {}
+            {
+            }
 
             return success;
         }
+
+        /// <summary>
+        ///     When you are deleting an item from your cart, you use AJAX to retrieve the
+        ///        title of the item you are deleting from your cart
+        /// </summary>
+        /// 
+        /// <param name="RemoveItem">
+        ///     A model that will hold the name of the album to indicate which item has
+        ///        been deleted from your cart
+        /// </param>
+        /// 
+        /// <param name="RecordId">
+        ///     The ID of the record in the cart database that holds the deleted item
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that title of the item that has been deleted has been retrieved
+        /// </returns>
 
         public bool GetAlbumTitleAJAX(ShoppingCartRemoveItem RemoveItem, int RecordId)
         {
@@ -737,6 +997,24 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        /// <summary>
+        ///     Uses AJAX to remove the deleted item from your shopping cart and calculate
+        ///        how many of that item is still in your cart
+        /// </summary>
+        /// 
+        /// <param name="RemoveItem">
+        ///     The model that holds the remaining count of the item after one of the item
+        ///        has been deleted from your cart
+        /// </param>
+        /// 
+        /// <param name="RecordId">
+        ///     The record in the cart database that holds the item that has been deleted
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means the item has been successfully deleted from your cart database
+        /// </returns>
+
         public bool RemoveFromCartAJAX(ShoppingCartRemoveItem RemoveItem, int RecordId)
         {
             bool success = false;
@@ -754,6 +1032,8 @@ namespace MvcMusicStore.Repositories
                     SqlCommand cmd = new SqlCommand(sql1, connection);
                     ItemCount = (int)cmd.ExecuteScalar();
 
+                    // Checks if deleting the item means you have no more of that item left
+                    //    in your cart
                     if (ItemCount > 1)
                     {
                         ItemCount = ItemCount - 1;
@@ -795,12 +1075,33 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        /// <summary>
+        ///     Calculates the cost of all the items in your cart using AJAX after one item has been deleted
+        ///        from your cart
+        /// </summary>
+        /// 
+        /// <param name="RemoveItem">
+        ///     Model that holds the total cost of all the items iny our cart after an item has been deleted
+        ///        from your cart
+        /// </param>
+        /// 
+        /// <param name="ShoppingCartItems">
+        ///     Model that holds all the items in your cart 
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means it has succesfully calculated the cost of all the items in your cart
+        ///        after you have deleted an item from your cart
+        /// </returns>
+
         public bool GetTotalAJAX(ShoppingCartRemoveItem RemoveItem, ShoppingCartItems ShoppingCartItems)
         {
             bool success = false;
 
             if (ShoppingCartItems.CartItems != null)
             {
+                // Goes through each item in your cart after an item has been deleted to calculate the
+                //    updated cost of all the items in your cart
                 foreach (var item in ShoppingCartItems.CartItems)
                 {
                     RemoveItem.CartTotal = RemoveItem.CartTotal + item.Count * item.Album.Price;
@@ -808,12 +1109,29 @@ namespace MvcMusicStore.Repositories
 
                 success = true;
             }
-            else
-            {
-            }
 
             return success;
         }
+
+        /// <summary>
+        ///     Counts the number of items in your cart using AJAX after you have deleted an item 
+        ///        from your cart
+        /// </summary>
+        /// 
+        /// <param name="RemoveItem">
+        ///     Model that holds how many items are in your cart after you have deleted an item
+        ///        from your cart
+        /// </param>
+        /// 
+        /// <param name="ShoppingCartItems">
+        ///     Model that holds all the items in your cart after you have deleted an item from
+        ///        your cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means you have successfully counted how many items are in your cart
+        ///        after you have deleted an item from your cart
+        /// </returns>
 
         public bool GetCountAJAX(ShoppingCartRemoveItem RemoveItem, ShoppingCartItems ShoppingCartItems)
         {
@@ -823,6 +1141,7 @@ namespace MvcMusicStore.Repositories
             {
                 RemoveItem.CartCount = 0;
 
+                // 
                 foreach (var item in ShoppingCartItems.CartItems)
                 {
                     RemoveItem.CartCount = RemoveItem.CartCount + item.Count;
@@ -830,11 +1149,25 @@ namespace MvcMusicStore.Repositories
 
                 success = true;
             }
-            else
-            {}
 
             return success;
         }
+
+        /// <summary>
+        ///     Get all the items in your cart in AJAX for your header
+        /// </summary>
+        /// 
+        /// <param name="Context">
+        ///     Represents the entire context of an individual HTTP request and response
+        /// </param>
+        /// 
+        /// <param name="CartItems">
+        ///     A list to hold all the items in your cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     success=true means that it has retrieved all the items from your cart
+        /// </returns>
 
         public bool GetCartItemsHeaderAJAX(HttpContext Context, List<Cart> CartItems)
         {
@@ -845,6 +1178,8 @@ namespace MvcMusicStore.Repositories
             {
                 if (Connect())
                 {
+                    // Checks if you are already logged in so it knows if it is to find
+                    // your shopping cart ID or your username in the Cart database
                     if (session.GetString(AlreadyLogIn) == "True")
                     {
                         String sql1 =
@@ -857,6 +1192,7 @@ namespace MvcMusicStore.Repositories
                         da.SelectCommand = new SqlCommand(sql1, connection);
                         da.Fill(dt);
 
+                        // Checks if you have any items in your cart
                         if (dt.Rows.Count > 0)
                         {
                             Cart CartItem;
@@ -892,6 +1228,7 @@ namespace MvcMusicStore.Repositories
                         da.SelectCommand = new SqlCommand(sql1, connection);
                         da.Fill(dt);
 
+                        // Checks if you have any items in your cart
                         if (dt.Rows.Count > 0)
                         {
                             Cart CartItem;
@@ -929,6 +1266,23 @@ namespace MvcMusicStore.Repositories
             return success;
         }
 
+        /// <summary>  
+        ///     Counts how many items are in your cart so it cna display in the header using AJAX 
+        ///        how many items are in your cart
+        /// </summary>
+        /// 
+        /// <param name="RemoveItem">
+        ///     Model that holds how many items are in your cart
+        /// </param>
+        /// 
+        /// <param name="ShoppingCartItems">
+        ///     Model that holds every item in your cart and how many of each item is in your cart
+        /// </param>
+        /// 
+        /// <returns>
+        ///     succes=true means it has successfully caluclated how many items are in your cart
+        /// </returns>
+
         public bool GetCountHeaderAJAX(ShoppingCartRemoveItem RemoveItem, ShoppingCartItems ShoppingCartItems)
         {
             bool success = false;
@@ -937,6 +1291,7 @@ namespace MvcMusicStore.Repositories
             {
                 RemoveItem.CartCount = 0;
 
+                // Goes through each item in your cart to calculate how many items in total are in your cart
                 foreach (var item in ShoppingCartItems.CartItems)
                 {
                     RemoveItem.CartCount = RemoveItem.CartCount + item.Count;

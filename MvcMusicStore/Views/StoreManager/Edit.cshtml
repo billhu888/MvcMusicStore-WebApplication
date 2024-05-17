@@ -11,6 +11,8 @@
     {
         @using (Html.BeginForm("Edit", "StoreManager", FormMethod.Post))
         {
+            <input type="hidden" name="AlbumId" value=@Model.AlbumId />
+
             <table>
                 <tr>
                     <td>@Html.DisplayNameFor(model => model.Genre)</td>
@@ -76,6 +78,8 @@
             <div>
                 @using (Html.BeginForm("Edit", "StoreManager", FormMethod.Post))
                 {
+                    <input type="hidden" name="AlbumId" value=@Model.AlbumId />
+
                     <table>
                         <tr>
                             <td>@Html.DisplayNameFor(model => model.SelectGenreId)</td>

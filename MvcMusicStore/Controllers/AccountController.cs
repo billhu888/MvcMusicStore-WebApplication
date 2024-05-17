@@ -194,13 +194,13 @@ namespace MvcMusicStore.Controllers
             string LogOnFromHeader = ShoppingCartRepo.CheckLogOnFromHeader(this.HttpContext);
 
             // Checks if the email address has already been taken or not
-            bool success1 = AccountRepo.RegisterEmail(Register);
+            bool success1 = AccountRepo.RegisterEmail(Register.Email);
 
             // Checks if the email address is valid or not
             bool success2 = AccountRepo.CheckEmailValid(Register.Email);
 
             // Checks if the username has already been taken or not
-            bool success3 = AccountRepo.RegisterUserName(Register);
+            bool success3 = AccountRepo.RegisterUserName(Register.UserName);
 
             // Checks is the username is at least 6 characters long
             bool success4 = AccountRepo.CheckUsernameLength(Register.UserName);

@@ -76,7 +76,9 @@ else
         <div>
             @using (Html.BeginForm("AddNewAlbum", "StoreManager", FormMethod.Post))
             {
-                <table>
+                <input type="hidden" name="AlbumId" value=@Model.AlbumId />
+
+                <table>                 
                     <tr>
                         <td>@Html.DisplayNameFor(model => model.SelectGenreId)</td>
                         <td>@Html.DropDownListFor(model => model.SelectGenreId, Model.SelectGenre, "Select Genre")</td>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
 using MvcMusicStore.Models;
 using MvcMusicStore.Repositories;
+using System.ComponentModel;
 
 namespace MvcMusicStore.Controllers
 {
@@ -116,6 +117,7 @@ namespace MvcMusicStore.Controllers
             {
                 // Checks which genres (by ID) in SelectGenre (contains all possible genres) 
                 //    are also in SelectGenreId (containing the genre(s) selected)
+                // Holds the genre that was chosen
                 List<SelectListItem> ChosenGenre = NewAlbum.SelectGenre.Where
                     (p => NewAlbum.SelectGenreId.Contains(int.Parse(p.Value))).ToList();
 
@@ -128,7 +130,8 @@ namespace MvcMusicStore.Controllers
             if (NewAlbum.SelectArtistId != null)
             {
                 // Checks which artists (by ID) in SelectArtist (contains all possible artists) 
-                //    are also in SelectArtistId (containing the artist(s) selected)
+                //    are also in SelectArtistId (containing the artist(s) selected) 
+                // Holds the artist that was chosen
                 List<SelectListItem> ChosenArtist = NewAlbum.SelectArtist.Where
                     (p => NewAlbum.SelectArtistId.Contains(int.Parse(p.Value))).ToList();
 
@@ -138,6 +141,8 @@ namespace MvcMusicStore.Controllers
                 }
             }
 
+            // Checks if the genre, artist, album title, album price, 
+            //    and album art url are all valid
             bool success1 = storemanagerrepo.GetNewAlbumID(NewAlbum);
             bool success2 = storemanagerrepo.CheckNewAlbumGenreId(NewAlbum);
             bool success3 = storemanagerrepo.CheckNewAlbumArtistId(NewAlbum);
@@ -147,6 +152,7 @@ namespace MvcMusicStore.Controllers
 
             if (success1 && success2 && success3 & success4 && success5 && success6)
             {
+                // Makes sure the album is successfully added to the database
                 bool success7 = storemanagerrepo.AddNewAlbum(NewAlbum);
 
                 ViewData["indicator"] = true;
@@ -162,10 +168,13 @@ namespace MvcMusicStore.Controllers
             }
             else
             {
+                // Get the list of genres to be displayed including
+                //    the one you selected (if you selected one)
                 NewAlbum.SelectGenre = new List<SelectListItem>();
                 storemanagerrepo.GetNewAlbumListGenre(NewAlbum.SelectGenre);
 
-
+                // Get the list of artists to be displayed including
+                //    the one you selected (if you selected one)
                 NewAlbum.SelectArtist = new List<SelectListItem>();
                 storemanagerrepo.GetNewAlbumListArtist(NewAlbum.SelectArtist);
 
@@ -201,11 +210,16 @@ namespace MvcMusicStore.Controllers
 
             ViewData["isPost"] = false;
 
+            album.AlbumId = AlbumId;
+
+            // Retrieve the information of the album whose information you want to edit
             bool success1 = storemanagerrepo.RetrieveAlbumInfo(album, AlbumId);
 
+            // Get the list of all of the album genres
             album.SelectGenre = new List<SelectListItem>();
             bool success2 = storemanagerrepo.ListGenres(album.SelectGenre, GenreId);
 
+            // Get the list of all of the album artists
             album.SelectArtist = new List<SelectListItem>();
             bool success3 = storemanagerrepo.ListArtists(album.SelectArtist, ArtistId);
 
@@ -250,6 +264,9 @@ namespace MvcMusicStore.Controllers
             // Checks if the list of selected music genre IDs is not null
             if (EditedAlbum.SelectGenreId != null)
             {
+                // Checks which genres(by ID) in SelectGenre(contains all possible genres)
+                //    are also in SelectGenreId (containing the genre(s) selected)
+                // Holds the genre that was chosen
                 List<SelectListItem> ChosenGenre = EditedAlbum.SelectGenre.Where
                     (p => EditedAlbum.SelectGenreId.Contains(int.Parse(p.Value))).ToList();
 
@@ -261,6 +278,9 @@ namespace MvcMusicStore.Controllers
 
             if (EditedAlbum.SelectArtistId != null)
             {
+                // Checks which artists (by ID) in SelectArtist (contains all possible artists) 
+                //    are also in SelectArtistId (containing the artist(s) selected) 
+                // Holds the artist that was chosen
                 List<SelectListItem> ChosenArtist = EditedAlbum.SelectArtist.Where
                     (p => EditedAlbum.SelectArtistId.Contains(int.Parse(p.Value))).ToList();
 
@@ -270,20 +290,21 @@ namespace MvcMusicStore.Controllers
                 }
             }
 
-            bool success1 = storemanagerrepo.GetNewAlbumID(EditedAlbum);
-            bool success2 = storemanagerrepo.CheckNewAlbumGenreId(EditedAlbum);
-            bool success3 = storemanagerrepo.CheckNewAlbumArtistId(EditedAlbum);
-            bool success4 = storemanagerrepo.CheckNewAlbumTitle(EditedAlbum.Title);
-            bool success5 = storemanagerrepo.CheckNewAlbumPrice(EditedAlbum.Price);
-            bool success6 = storemanagerrepo.CheckNewAlbumArtURL(EditedAlbum.AlbumArtUrl);
+            // Check to make sure that the edited artist, title, price, and arturl 
+            //    of the album are valid
+            bool success1 = storemanagerrepo.CheckNewAlbumArtistId(EditedAlbum);
+            bool success2 = storemanagerrepo.CheckNewAlbumTitle(EditedAlbum.Title);
+            bool success3 = storemanagerrepo.CheckNewAlbumPrice(EditedAlbum.Price);
+            bool success4 = storemanagerrepo.CheckNewAlbumArtURL(EditedAlbum.AlbumArtUrl);
 
-            if (success1 && success2 && success3 & success4 && success5 && success6)
+            if (success1 & success2 && success3 & success4)
             {
-                bool success7 = storemanagerrepo.AddNewAlbum(EditedAlbum);
+                // Edit the album in the database
+                bool success5 = storemanagerrepo.UpdateAlbum(EditedAlbum);
 
                 ViewData["indicator"] = true;
 
-                if (success7 == true)
+                if (success5 == true)
                 {
                     return View(EditedAlbum);
                 }
@@ -294,10 +315,13 @@ namespace MvcMusicStore.Controllers
             }
             else
             {
+                // Get the list of genres to be displayed including
+                //    the one you selected 
                 EditedAlbum.SelectGenre = new List<SelectListItem>();
                 storemanagerrepo.GetNewAlbumListGenre(EditedAlbum.SelectGenre);
 
-
+                // Get the list of artists to be displayed including
+                //    the one you selected 
                 EditedAlbum.SelectArtist = new List<SelectListItem>();
                 storemanagerrepo.GetNewAlbumListArtist(EditedAlbum.SelectArtist);
 
@@ -323,6 +347,7 @@ namespace MvcMusicStore.Controllers
             StoreManagerRepo storemanagerrepo = new StoreManagerRepo(); 
             Album album = new Album();
 
+            // Retrieve all information about the album whose information you requested
             bool success = storemanagerrepo.RetrieveAlbumInfo(album, AlbumId);
 
             if (success)
@@ -337,14 +362,15 @@ namespace MvcMusicStore.Controllers
 
         /// <summary>
         ///     GET: /StoreManager/Delete
+        ///     Gets the information of the album that you want to delete
         /// </summary>
         /// 
         /// <param name="AlbumId">
-        /// 
+        ///     The Id of the album that you want to delete
         /// </param>
         /// 
         /// <returns>
-        /// 
+        ///     The details of the album that you want to delete
         /// </returns>
 
         public IActionResult Delete(int AlbumId)
@@ -352,6 +378,7 @@ namespace MvcMusicStore.Controllers
             StoreManagerRepo storemanagerrepo = new StoreManagerRepo();
             Album album = new Album();
 
+            // Get all information of the album that you want to delete
             bool success = storemanagerrepo.RetrieveAlbumInfo(album, AlbumId);
 
             if (success)
@@ -366,14 +393,15 @@ namespace MvcMusicStore.Controllers
 
         /// <summary>
         ///     GET: /StoreManager/DeleteConfirmation
+        ///     A confirmation page confirming if you want to delete the album
         /// </summary>  
         /// 
         /// <param name="AlbumId">
-        /// 
+        ///     The Id of the album that you want to delete
         /// </param>
         /// 
         /// <returns>
-        /// 
+        ///     A page confirming if you want to delete the album
         /// </returns>
 
         public IActionResult DeleteConfirmation(int AlbumId) 
@@ -381,6 +409,7 @@ namespace MvcMusicStore.Controllers
             StoreManagerRepo storemanagerrepo = new StoreManagerRepo();
             Album album = new Album();
 
+            // Get all information of the album that you want to delete
             bool success = storemanagerrepo.RetrieveAlbumInfo(album, AlbumId);
 
             if (success)
@@ -395,20 +424,23 @@ namespace MvcMusicStore.Controllers
 
         /// <summary>
         ///     GET: /StoreManager/DeleteAlbum
+        ///     Confimration that the album has been deleted
         /// </summary>
         /// 
         /// <param name="AlbumId">
-        /// 
+        ///     The Id of the album you want to delete
         /// </param>
         /// 
         /// <returns>
-        /// 
+        ///     A page confirming that the album you requested 
+        ///        delete has been deleted
         /// </returns>
 
         public IActionResult DeleteAlbum(int AlbumId)
         {
             StoreManagerRepo storemanagerrepo = new StoreManagerRepo();
 
+            // Delete the album you want to delete
             storemanagerrepo.DeleteAlbum(AlbumId);
 
             return View();
