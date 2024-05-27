@@ -898,6 +898,8 @@ namespace MvcMusicStore.Repositories
                 {
                     ShoppingCartItems.CartTotalItems = ShoppingCartItems.CartTotalItems + item.Count;
                 }
+
+                success = true;
             }
 
             return success;
