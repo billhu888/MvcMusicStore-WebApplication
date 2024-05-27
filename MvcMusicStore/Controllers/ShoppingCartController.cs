@@ -39,7 +39,7 @@ namespace MvcMusicStore.Controllers
             // Gets the total price of all of the items in your shopping cart
             bool success3 = cart.GetTotal(ViewModel);
 
-            if (success1 && success3)
+            if (success1 && success2 && success3)
             {
                 return View(ViewModel);
             }
